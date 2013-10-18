@@ -165,6 +165,26 @@
 	font-size: 19px;
 }
 
+.list-item-title-box {
+	margin-top: 30px;
+	margin-left: 15px;
+}
+
+.list-item-title {
+	font-weight: bold;
+	font-size: 19px;
+}
+
+.list-item-subtitle {
+	font-size: 12px;
+}
+
+
+.list-header {
+	padding-left: 5px;
+	font-weight: bold;
+}
+
 .list-arrow {
 	width: 1rem;
 	margin-top: 35px;
@@ -204,6 +224,5 @@
 .topcoat-tab-bar__button--large:active,
 :checked + .topcoat-tab-bar__button {
   color: #25B5C2;
-  background-color: transparent;
   box-shadow: none;
 }
