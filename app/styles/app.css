@@ -23,6 +23,29 @@
 	line-height: 2.7rem;
 }
 
+.topcoat-tab-bar__button {
+	height: 3.5rem;
+}
+
+.tabbar-item {
+	background-color: transparent;	
+	border: 1px solid #999;
+	padding: 5px;
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.tarbar-item:active,
+:checked + .tabbar-item {
+	background-color: #25b5c2;
+	border: none;
+}
+
+.tabbar-item-label {
+	margin-top: -10px;
+	line-height: 0.1rem;
+}
+
 .line-height {
 	line-height: 2.7rem;
 }
@@ -115,4 +138,19 @@
 
 .line-height-4 {
 	line-height: 4rem;
+}
+
+
+
+
+.topcoat-tab-bar__button {
+	color: #999;
+}
+
+.topcoat-tab-bar__button:active,
+.topcoat-tab-bar__button--large:active,
+:checked + .topcoat-tab-bar__button {
+  color: #25B5C2;
+  background-color: transparent;
+  box-shadow: none;
 }
