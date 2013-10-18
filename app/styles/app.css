@@ -97,12 +97,34 @@
 	left: 20px;
 }
 
+.option-button {	
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.option-button-icon {
+	height: 2rem;
+	width: 2.3rem;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
 .music-controls{
 	position: absolute;
-	right: 20px;
-	bottom: 40px;
-	width: 250px;
+	right: 0;
+	bottom: 20px;
+	width: 200px;
 	height: 250px;
+}
+
+.music-control-icon {
+	height: 2rem;
+	width: 2rem;
+	margin-top: 13px;
+	margin-left: 3px;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .music-button {
@@ -115,25 +137,25 @@
 	height: 6rem;
 	position: absolute;
 	top: 100px;
-	left: 130px;
+	left: 90px;
 }
 
 .play-button {
 	position: absolute;
 	top: 50px;
-	left: 50px;
+	left: 35px;
 }
 
 .fast-forward-button{
 	position: absolute;
-	top: 0;
-	left: 150px;
+	top: 20px;
+	left: 110px;
 }
 
 .fast-backward-button{
 	position: absolute;
-	top: 150px;
-	left: 20px;
+	top: 125px;
+	left: 10px;
 }
 
 .line-height-4 {
