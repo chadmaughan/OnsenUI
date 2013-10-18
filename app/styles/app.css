@@ -1,4 +1,32 @@
 .debug {
-    border: 1px solid #ff00ff;
+    /*border: 1px solid #ff00ff;*/
 }
 
+.main-color {
+	color: #25b5c2;
+}
+
+.topcoat-icon-button--quiet {
+	color: #25b5c2;	
+}
+
+.topcoat-navigation-bar {
+	height: 2.7rem;
+	background-color: black;
+}
+
+.topcoat-navigation-bar__item {
+	line-height: 2.7rem;
+}
+
+.line-height {
+	line-height: 2.7rem;
+}
+
+.bg-white-30 {
+	background-color: rgba(255,255,255,0.3);
+}
+
+.radius-6 {
+	border-radius: 6px;
+}

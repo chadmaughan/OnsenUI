@@ -1,4 +1,4 @@
-function HomeNavigator($scope) {
+function HomeNavigator($scope, $timeout) {
 
 	$scope.$on('hide:toolbar', function() {
 		$scope.ons.navigator.setToolbarVisibility(false);
@@ -6,6 +6,9 @@ function HomeNavigator($scope) {
 
 	$scope.$on('show-detail', function() {
 		$scope.ons.navigator.pushPage('music/detail.html', 'Detail');
-		$scope.ons.navigator.setToolbarVisibility(true);
+		$timeout(function(){
+			$scope.ons.navigator.setToolbarVisibility(true);
+		}, 0);
+		
 	});
 }

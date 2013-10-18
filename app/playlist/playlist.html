@@ -1,3 +1,15 @@
-<div class="page center">
-	<h3 ng-click="ons.navigator.pushPage('music/list.html', 'Selected playlist');">Playlist</h3>	
+<div class="page center" ng-controller="PlaylistController">	
+	<ons-list>
+		<ons-list-item>
+			<ons-search-input class="full line-height bg-white-30 radius-6" placeholder="Search">
+				
+			</ons-search-input>
+		</ons-list-item>
+		<ons-list-item ng-click="showPlaylist()">
+			Playlist 1
+		</ons-list-item>
+		<ons-list-item>
+			Playlist 2
+		</ons-list-item>
+	</ons-list>
 </div>
