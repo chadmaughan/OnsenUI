@@ -1,3 +1,15 @@
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear-float {
+    clear: both;
+}
+
 .debug {
     /*border: 1px solid #ff00ff;*/
 }
@@ -8,6 +20,11 @@
 
 .main-color {
 	color: #25b5c2;
+}
+
+.topcoat-list__item {
+	list-style: none;
+	padding: 5px;
 }
 
 .topcoat-icon-button--quiet {
@@ -138,6 +155,20 @@
 	position: absolute;
 	top: 100px;
 	left: 90px;
+}
+
+.playlist-item-label {
+	margin-top: 35px;
+	margin-left: 15px;
+	color: #25B5C2;
+	font-weight: bold;
+	font-size: 19px;
+}
+
+.list-arrow {
+	width: 1rem;
+	margin-top: 35px;
+	margin-right: 4px;
 }
 
 .play-button {
