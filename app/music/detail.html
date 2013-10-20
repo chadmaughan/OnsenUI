@@ -12,8 +12,8 @@
         <span>{{endSec}}</span>
     </p>
 
-    <div style="color: white;">
-        <skewed-progress class="full" style="margin-top:160px" value="40" max="100" left-text="{{currentPositionFormatted}}" right-text="{{endSec}}"></skewed-progress>
+    <div style="color: white; margin-top:100px;">
+        <skewed-progress class="full" value="{{currentPosition}}" max="{{music.duration}}" left-text="{{currentPositionFormatted}}" right-text="{{endSec}}"></skewed-progress>
     </div>    
 
 	<div class="option-controls">
@@ -40,7 +40,7 @@
 				<div class="music-control-icon" style="background-image: url('icons/back.png')"></div>
 			</div>
 
-			<circular-progress class="volume-button" percentage="80">
+			<circular-progress hm-drag-down="$parent.dragDown()" hm-drag-up="$parent.dragUp()" class="volume-button" percentage="{{volume}}">
 				
 			</circular-progress>
 		</div>

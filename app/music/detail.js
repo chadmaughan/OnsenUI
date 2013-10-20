@@ -9,6 +9,8 @@ Play Music
     app.controller('musicPlayController', ['$scope', 'Data',
         function($scope, Data) {
 
+            $scope.volume = 50;
+
             init();
 
             function init() {
@@ -52,6 +54,20 @@ Play Music
                 $scope.shuffleChecked = obj.shuffle;
 
                 localStorage.setItem("playMode", Data.playMode);
+            }
+
+            $scope.dragDown = function(){
+                if($scope.volume > 0){
+                    $scope.volume--;
+                    setMusicVolume($scope.volume);
+                }
+            }
+
+            $scope.dragUp = function(){
+                if($scope.volume < 100){
+                    $scope.volume++;
+                    setMusicVolume($scope.volume);
+                }
             }
 
             $scope.playModeSelect = function(mode) {
@@ -219,7 +235,7 @@ Play Music
 
 
             // music volume
-            $scope.setMusicVolume = function(vl) {
+            var setMusicVolume = function(vl) {
                 vl = vl / 100;
                 if (Data.my_media) {
                     Data.my_media.setVolume(vl);

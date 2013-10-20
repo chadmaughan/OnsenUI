@@ -28,12 +28,12 @@ circular-progress {
  * ------------------------------------- */
 .progress-radial .progress-overlay {
   position: absolute;
-  width: 80%;
-  height: 80%;
+  width: 94%;
+  height: 94%;
   background-color: black;
   border-radius: 50%;
-  margin-left: 10%;
-  margin-top: 10%;
+  margin-left: 3%;
+  margin-top: 3%;
   text-align: center;
   line-height: 60px;
   font-size: 16px;
