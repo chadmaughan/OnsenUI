@@ -1,16 +1,22 @@
-function HomeNavigator($scope, $timeout) {
+(function() {
 
-	$scope.$on('hide:toolbar', function() {
-		$scope.ons.navigator.setToolbarVisibility(false);
-		$scope.bg = "";
-	});
+	var app = angular.module('myApp');
+	app.controller('HomeNavigator', ['$scope', '$timeout', 'Data',
+		function($scope, $timeout, Data) {
 
-	$scope.$on('show-detail', function() {
-		$scope.ons.navigator.pushPage('music/detail.html', 'Detail');
-		$timeout(function(){
-			$scope.ons.navigator.setToolbarVisibility(true);
-		}, 0);
+			$scope.$on('hide:toolbar', function() {
+				$scope.ons.navigator.setToolbarVisibility(false);
+				$scope.bg = "";
+			});
 
-		$scope.bg = "images/test_artwork.png";
-	});
-}
+			$scope.$on('music-detail', function(event, music) {
+				$scope.ons.navigator.pushPage('music/detail.html', 'Detail');
+				$timeout(function() {
+					$scope.ons.navigator.setToolbarVisibility(true);
+				}, 0);
+
+				$scope.bg = music.album_image;
+			});
+		}
+	]);
+})();

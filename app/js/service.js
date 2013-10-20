@@ -1,13 +1,13 @@
 /*===================================================================
  Data
 ===================================================================*/
+(function() {
+	var myApp = angular.module('myApp');
 
-var myApp = angular.module('myApp');
+	myApp.factory('Data', function() {
 
-myApp.factory('Data', function(){
-     
-    var data = {
-    };
-    
-    return data;
-});
+		var data = {};
+
+		return data;
+	});
+})();
