@@ -1,64 +1,25 @@
-<div class="page" ng-controller="MusicListController">
+<div class="page" ng-controller="musiclistController">
 	<ons-list>
-		<h3 class="topcoat-list__header list-header main-color">A</h3>
+		<ons-list-item>
+			<ons-search-input ng-model="query.text" class="full line-height bg-white-30 radius-6" placeholder="Search"></ons-search-input>
+		</ons-list-item>
 
-		<ons-list-item ng-click="playMusic()">
-			<img class="float-left" src="http://imgjam2.jamendo.com/albums/s124/124799/covers/1.100.jpg" alt="">
+		<ons-list-item class="block" ng-repeat="music in musics | orderBy:'+name' | filter:query.text" ng-animate="'zoom'">
+			<img width="100" class="float-left" ng-src="{{music.album_image}}">
 			<div class="list-item-title-box float-left">
 				<div class="list-item-title">
-					Music Title
+					{{music.name}}
 				</div>
 				<div class="list-item-subtitle">
-					Artist Name
+					{{music.artist_name}}
 				</div>
 			</div>
 			<img class="float-right list-arrow" src="icons/play.png" alt="">
 			<div class="clear-float"></div>
 		</ons-list-item>
 
-		<ons-list-item ng-click="playMusic()">
-			<img class="float-left" src="http://imgjam2.jamendo.com/albums/s125/125608/covers/1.100.jpg" alt="">
-			<div class="list-item-title-box float-left">
-				<div class="list-item-title">
-					Music Title
-				</div>
-				<div class="list-item-subtitle">
-					Artist Name
-				</div>
-			</div>
-			<img class="float-right list-arrow" src="icons/play.png" alt="">
-			<div class="clear-float"></div>
-		</ons-list-item>
+		<!-- <h3 class="topcoat-list__header list-header main-color">A</h3> -->
 
-		<h3 class="topcoat-list__header list-header main-color">B</h3>
-
-		<ons-list-item ng-click="playMusic()">
-			<img class="float-left" src="http://imgjam2.jamendo.com/albums/s124/124799/covers/1.100.jpg" alt="">
-			<div class="list-item-title-box float-left">
-				<div class="list-item-title">
-					Music Title
-				</div>
-				<div class="list-item-subtitle">
-					Artist Name
-				</div>
-			</div>
-			<img class="float-right list-arrow" src="icons/play.png" alt="">
-			<div class="clear-float"></div>
-		</ons-list-item>
-
-		<ons-list-item ng-click="playMusic()">
-			<img class="float-left" src="http://imgjam2.jamendo.com/albums/s125/125608/covers/1.100.jpg" alt="">
-			<div class="list-item-title-box float-left">
-				<div class="list-item-title">
-					Music Title
-				</div>
-				<div class="list-item-subtitle">
-					Artist Name
-				</div>
-			</div>
-			<img class="float-right list-arrow" src="icons/play.png" alt="">
-			<div class="clear-float"></div>
-		</ons-list-item>
 	</ons-list>
 	
 

@@ -39,6 +39,25 @@ body {
 	color: #25b5c2;	
 }
 
+.topcoat-icon-button--quiet:hover {
+	background-color: transparent;	
+	color: #29C8D6;
+	border: 1px solid rgba(0, 0, 0, 0);
+	box-shadow: none;
+}
+
+.topcoat-icon-button--quiet:active {
+	background-color: transparent;	
+	color: #2DDCEC;
+	border: 1px solid rgba(0, 0, 0, 0);
+	box-shadow: none;	
+}
+
+.topcoat-search-input:focus, .topcoat-search-input--large:focus {
+	border: none;
+	box-shadow: none;
+}
+
 .topcoat-navigation-bar {
 	height: 2.7rem;
 	background-color: rgba(0,0,0,0.8);
@@ -176,11 +195,15 @@ body {
 .list-item-title-box {
 	margin-top: 30px;
 	margin-left: 15px;
+	width: 50%;
 }
 
 .list-item-title {
 	font-weight: bold;
 	font-size: 19px;
+	text-overflow: ellipsis;
+  	white-space: nowrap;
+  	overflow: hidden;  	
 }
 
 .list-item-subtitle {
