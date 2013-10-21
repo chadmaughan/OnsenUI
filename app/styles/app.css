@@ -8,6 +8,11 @@ ons-list-item:active {
 
 .topcoat-list {
 	background-color: black;
+	border-top: none;
+}
+
+.topcoat-list__container {
+	border-top: none;
 }
 
 .float-left {
