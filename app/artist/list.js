@@ -15,11 +15,11 @@ Artist List
 
             function init() {
                 var artistMusics = new Array();
-                var playlists = JSON.parse(localStorage.getItem("playlist"));
+                var playlists = Data.playlists;
 
                 if (playlists) {
                     for (var playlistCount = 0; playlistCount < playlists.length; playlistCount++) {
-                        var playlistMusics = JSON.parse(localStorage.getItem(playlists[playlistCount].name));
+                        var playlistMusics = Data[playlists[playlistCount].name];
 
                         if (playlistMusics) {
                             for (var musicCount = 0; musicCount < playlistMusics.length; musicCount++) {

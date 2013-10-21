@@ -12,22 +12,7 @@
 					text: ''
 				};
 
-				var playlistData = localStorage.getItem("playlist");
-				var playlistJson = JSON.parse(playlistData);
-
-				if (playlistJson) {
-					$scope.playlists = playlistJson;
-				} else {
-					var myFavorite = new Object();
-					myFavorite.id = 1;
-					myFavorite.name = "MyFavorite";
-
-					var myPlaylists = new Array();
-					myPlaylists[0] = myFavorite;
-
-					$scope.playlists = myPlaylists;
-					localStorage.setItem("playlist", JSON.stringify(myPlaylists));
-				}
+				$scope.playlists = Data.playlists;
 			}
 
 			$scope.addNewPlaylistField = function() {
