@@ -6,12 +6,19 @@ Play Music
 
     var app = angular.module('myApp');
 
-    app.controller('musicPlayController', ['$scope', 'Data', 'Player',
-        function($scope, Data, Player) {
+    app.controller('musicPlayController', ['$scope', '$rootScope', 'Data', 'Player',
+        function($scope, $rootScope, Data, Player) {
 
             $scope.volume = 95;
             $scope.player = Player;
             $scope.music = Data.selectedMusic;
+
+            $scope.ons.tabbar.setTabbarVisibility(false);
+
+            $scope.$on('$destroy', function(){
+                $rootScope.$broadcast('exit-detail');
+                $scope.ons.tabbar.setTabbarVisibility(true);
+            });
 
             $scope.playOrPause = function(src) {
                 if (Player.isPlaying()) {

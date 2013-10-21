@@ -181,7 +181,7 @@ Musiclist
 				Data.showMusicNumber = Data.selectedMusicIndex + '/' + $scope.musics.length;
 
 				$rootScope.$broadcast('music-detail', selectedMusic);
-				// $scope.ons.navigator.pushPage('music/detail.html', Data.showMusicNumber);
+				$scope.ons.navigator.pushPage('music/detail.html', Data.showMusicNumber);
 			}
 
 			//Uniqie Check
