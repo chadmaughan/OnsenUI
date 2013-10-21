@@ -5,11 +5,13 @@
 
 		var Player = function() {
 			this.media = null;
+			this.currentPosition = 0;
 			// if(Media){
 			// 	this.status = Media.MEDIA_NONE;
 			// }			
 
 			this.play = function(src, $scope) {
+				this.currentPosition = 0;
 				this.scope = $scope;
 				this.media = new Media(src, this.onSuccess, this.onError, $.proxy(this.onMediaStatus, this));
 				this.media.play();
@@ -70,7 +72,6 @@
 					function(position) {
 						that.scope.$apply(function() {
 							that.currentPosition = position;
-							that.currentPositionFormatted = that.convertSec(position);
 						});
 					},
 					// error callback
@@ -84,17 +85,6 @@
 			this.stopPlayTimer = function(){
                 clearInterval(this.playTimer);
             };
-
-            this.convertSec = function(sec) {
-                if (sec === 0) {
-                    return "0:00";
-                } else {
-                    var minute = Math.floor(sec / 60);
-                    var second = Math.floor(sec - minute * 60);
-                    return minute + ":" + second;
-                }
-            };
-
 		};
 
 		return new Player();

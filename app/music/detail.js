@@ -21,10 +21,11 @@ Play Music
             });
 
             $scope.playOrPause = function(src) {
+                console.log('play or pause');
                 if (Player.isPlaying()) {
                     Player.pause();
                 } else {
-                    Player.play(src);
+                    Player.play(src, $scope);
                 }
             };
 

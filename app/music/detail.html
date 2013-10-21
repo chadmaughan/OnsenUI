@@ -4,16 +4,16 @@
 		<div>
 			<small>{{music.artist_name}} - {{music.album_name}}</small>
 		</div>
-	</div>	
+	</div>		
 
     <p style="color: white;">
-        <span>{{currentPositionFormatted}}</span>
-        <ons-progress style="width:70%;" value="{{currentPosition}}" max="{{music.duration}}"></ons-progress>
-        <span>{{endSec}}</span>
+        <span>{{player.currentPosition | human_time}}</span>
+        <ons-progress style="width:70%;" value="{{player.currentPosition}}" max="{{music.duration}}"></ons-progress>
+        <span>{{music.duration | human_time}}</span>
     </p>
 
     <div style="color: white; margin-top:100px;">
-        <skewed-progress class="full" value="{{currentPosition}}" max="{{music.duration}}" left-text="{{currentPositionFormatted}}" right-text="{{endSec}}"></skewed-progress>
+        <skewed-progress class="full" value="{{player.currentPosition}}" max="{{music.duration}}" left-text="{{player.currentPosition | human_time}}" right-text="{{music.duration | human_time}}"></skewed-progress>
     </div>
 
 	<div class="option-controls">

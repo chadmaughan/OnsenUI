@@ -1,4 +1,4 @@
 (function(){
 	'use strict';
-	angular.module('myApp', ['onsen.directives', 'myApp.directives', 'angular-gestures']);
+	angular.module('myApp', ['onsen.directives', 'myApp.filters', 'myApp.directives', 'angular-gestures']);
 })();
