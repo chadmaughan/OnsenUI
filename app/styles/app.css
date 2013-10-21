@@ -260,16 +260,19 @@ ons-list-item:active {
 	line-height: 4rem;
 }
 
-
-
+.topcoat-tab-bar {
+	box-shadow: 0 -3px 20px #000;
+}
 
 .topcoat-tab-bar__button {
-	color: #999;
+	background-color: #222;
+	box-shadow: none;
+	padding: 0;
 }
 
 .topcoat-tab-bar__button:active,
 .topcoat-tab-bar__button--large:active,
 :checked + .topcoat-tab-bar__button {
   color: #25B5C2;
-  box-shadow: none;
+  background-color: #222;  
 }

@@ -33,7 +33,7 @@ Play Music
                 if ($scope.volume > 0) {
                     $scope.volume--;
                     setTimeout(function() {
-                        setMusicVolume($scope.volume);
+                        Player.setMusicVolume($scope.volume);
                     }, 0);
 
                 }
@@ -43,18 +43,10 @@ Play Music
                 if ($scope.volume < 100) {
                     $scope.volume++;
                     setTimeout(function() {
-                        setMusicVolume($scope.volume);
+                        Player.setMusicVolume($scope.volume);
                     }, 0);
                 }
-            };
-
-            // music volume
-            var setMusicVolume = function(vl) {
-                vl = vl / 100;
-                if (Data.my_media) {
-                    Data.my_media.setVolume(vl);
-                }
-            };
+            };            
 
         }
     ]);
