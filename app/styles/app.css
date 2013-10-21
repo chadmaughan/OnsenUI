@@ -3,7 +3,7 @@ body {
 }
 
 ons-list-item:active {
-	background-color: #25B5C2;
+	background-color: #333;
 }
 
 .topcoat-list {
@@ -56,7 +56,7 @@ ons-list-item:active {
 .topcoat-icon-button--quiet:active {
 	background-color: transparent;	
 	color: #41EFFF;
-	border: 1px solid gray;
+	border: 1px solid #25B5C2;
 	box-shadow: none;	
 }
 
@@ -198,7 +198,7 @@ ons-list-item:active {
 .playlist-item-label {
 	margin-top: 35px;
 	margin-left: 15px;
-	color: #25B5C2;
+	color: white;
 	font-weight: bold;
 	font-size: 19px;
 }
