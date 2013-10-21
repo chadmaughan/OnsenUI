@@ -23,11 +23,11 @@
                         scope.roundedPercentage = roundedPercentage;
                         if (roundedPercentage < 50) {
                             degree = 3.6 * roundedPercentage + 90;
-                            css = "linear-gradient(90deg, #2f3439 50%, transparent 50%, transparent), linear-gradient(" + degree + "deg, #25b5c2 50%, #2f3439 50%, #2f3439)";
+                            css = "-webkit-linear-gradient(90deg, #2f3439 50%, transparent 50%, transparent), -webkit-linear-gradient(" + degree + "deg, #25b5c2 50%, #2f3439 50%, #2f3439)";
                             progressRadial.css('background-image', css);
                         } else {
                             degree = 3.6 * roundedPercentage - 270;
-                            css = "linear-gradient(" + degree + "deg, #25b5c2 50%, transparent 50%, transparent), linear-gradient(270deg, #25b5c2 50%, #2f3439 50%, #2f3439)";
+                            css = "-webkit-linear-gradient(" + degree + "deg, #25b5c2 50%, transparent 50%, transparent), -webkit-linear-gradient(270deg, #25b5c2 50%, #2f3439 50%, #2f3439)";
                             progressRadial.css('background-image', css);
                         }
 
