@@ -30,10 +30,10 @@
 
 	<div class="music-controls">
 		<div class="relative">
-			<div class="topcoat-icon-button round music-button white-border bg-black play-button" ng-click="pushPlay(music.audio)">
-				<div ng-show="status.paused" ng-animate="'zoom'" class="music-control-icon" style="
+			<div class="topcoat-icon-button round music-button white-border bg-black play-button" ng-click="playOrPause(music.audio)">
+				<div ng-show="!player.isPlaying()" ng-animate="'zoom'" class="music-control-icon" style="
 				background-image: url('icons/play.png')"></div>
-				<div ng-show="!status.paused" ng-animate="'zoom'" class="music-control-icon" style="background-image: url('icons/pause.png')"></div>
+				<div ng-show="player.isPlaying()" ng-animate="'zoom'" class="music-control-icon" style="background-image: url('icons/pause.png')"></div>
 			</div>
 			<div class="topcoat-icon-button round music-button white-border bg-black fast-forward-button" ng-click="pushForword()">
 				<div class="music-control-icon" style="background-image: url('icons/next.png')"></div>

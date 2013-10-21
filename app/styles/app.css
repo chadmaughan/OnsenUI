@@ -41,6 +41,9 @@ ons-list-item:active {
 
 .topcoat-icon-button--quiet {
 	color: #25b5c2;	
+	border-radius: 50%;
+	width: 2.5rem;
+	height: 2.5rem;
 }
 
 .topcoat-icon-button--quiet:hover {
@@ -51,9 +54,9 @@ ons-list-item:active {
 }
 
 .topcoat-icon-button--quiet:active {
-	background-color: transparent;	
-	color: #2DDCEC;
-	border: 1px solid rgba(0, 0, 0, 0);
+	background-color: gray;	
+	color: #41EFFF;
+	border: none;
 	box-shadow: none;	
 }
 
