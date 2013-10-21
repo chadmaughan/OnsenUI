@@ -9,7 +9,23 @@
   <link rel="stylesheet" href="lib/onsen/css/topcoat-mobile-dark.css">  
   <link rel="stylesheet" href="styles/app.css"/>
   <link rel="stylesheet" href="js/circular_progress/circular_progress.css"/>
-  
+  <script src="lib/jquery.js"></script>
+
+  <script>
+    function onDeviceReady() {
+        if (parseFloat(window.device.version) === 7.0) {
+            window.ios7 = true;
+
+            yepnope({
+              test : window.ios7,
+              yep  : 'styles/ios7.css',         
+            });
+        }
+    }
+      
+    document.addEventListener('deviceready', onDeviceReady, false);
+      
+  </script>
 </head>
 
 <body class="max">    
@@ -18,7 +34,6 @@
  
 </body>
   
-  <script src="lib/jquery.js"></script>
   <script src="lib/cordova.js"></script>  
   <script src="lib/onsen/onsen.js"></script>    
 
