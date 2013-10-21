@@ -9,19 +9,17 @@ Play Music
     app.controller('musicPlayController', ['$scope', 'Data',
         function($scope, Data) {
 
-            $scope.volume = 50;
+            $scope.volume = 95;
 
             init();
-
+            $scope.status = {
+                paused: !Data.nowPlay
+            };            
+            
             function init() {
                 $scope.music = Data.selectedMusic;
-                $scope.playType = "repeat";
-                if (Data.nowPlay) {
-                    $scope.PlayButtonText = "Stop";
-                } else {
-                    $scope.PlayButtonText = "Play";
-                }
-
+                $scope.playType = "repeat";                
+                
                 $scope.playRange = 0;
                 $scope.nowSec = 0;
                 $scope.currentPositionFormatted = convertSec(0);
@@ -59,14 +57,19 @@ Play Music
             $scope.dragDown = function(){
                 if($scope.volume > 0){
                     $scope.volume--;
-                    setMusicVolume($scope.volume);
+                    setTimeout(function(){
+                        setMusicVolume($scope.volume);
+                    }, 0);
+                        
                 }
             }
 
             $scope.dragUp = function(){
                 if($scope.volume < 100){
                     $scope.volume++;
-                    setMusicVolume($scope.volume);
+                    setTimeout(function(){
+                        setMusicVolume($scope.volume);
+                    }, 0);
                 }
             }
 
@@ -78,13 +81,11 @@ Play Music
                 console.log(src);
                 if (Data.nowPlay) {
                     pauseAudio();
-                    Data.nowPlay = false;
-                    Data.pause = true;
-                    $scope.PlayButtonText = "Play";
+                    // Data.nowPlay = false;
+                    // Data.pause = true;
                 } else {
                     playAudio(src);
-                    Data.nowPlay = true;
-                    $scope.PlayButtonText = "Stop";
+                    // Data.nowPlay = true;
                 }
             }
 
@@ -140,9 +141,7 @@ Play Music
     ===================================================================*/
 
             function playAudio(src) {
-                if (!Data.pause) {
-                    Data.my_media = new Media(src, onSuccess, onError, mediaStatus);
-                }
+                Data.my_media = new Media(src, onSuccess, onError, mediaStatus);
                 Data.my_media.play();
             }
 
@@ -151,6 +150,7 @@ Play Music
             function pauseAudio() {
                 if (Data.my_media) {
                     Data.my_media.pause();
+                    $scope.status.paused = true;
                 }
             }
 
@@ -190,9 +190,18 @@ Play Music
             function mediaStatus(status){
                 console.log('status:' + status);
                 if(status === Media.MEDIA_RUNNING){
+                    $scope.$apply(function(){
+                        $scope.status.paused = false;
+                        Data.nowPlay = true;
+                    });
+                    
                     startPlayTimer();
                 }else if(status === Media.MEDIA_PAUSED || status === MEDIA_STOPPED){
                     stopPlayTimer();
+                    $scope.$apply(function(){
+                        $scope.status.paused = true;
+                        Data.nowPlay = false;
+                    });                    
                 }
                 
                 // Media.MEDIA_NONE = 0;

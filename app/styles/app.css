@@ -2,6 +2,10 @@ body {
 	background-color: black;
 }
 
+ons-list-item:active {
+	background-color: #25B5C2;
+}
+
 .topcoat-list {
 	background-color: black;
 }

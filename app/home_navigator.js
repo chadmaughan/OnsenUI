@@ -5,17 +5,22 @@
 		function($scope, $timeout, Data) {
 
 			$scope.$on('hide:toolbar', function() {
-				$scope.ons.navigator.setToolbarVisibility(false);
-				$scope.bg = "";
+                $scope.ons.navigator.setToolbarVisibility(false);
+                $timeout(function() {				    
+				    $scope.bg = "";
+                }, 300);
 			});
 
 			$scope.$on('music-detail', function(event, music) {
 				$scope.ons.navigator.pushPage('music/detail.html', 'Detail');
 				$timeout(function() {
 					$scope.ons.navigator.setToolbarVisibility(true);
-				}, 0);
+				}, 200);
 
-				$scope.bg = music.album_image;
+                $timeout(function(){
+                    $scope.bg = music.album_image;    
+                }, 200);
+				
 			});
 		}
 	]);
