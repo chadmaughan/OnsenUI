@@ -44,6 +44,14 @@ ons-list-item:active {
 	padding: 5px;
 }
 
+.topcoat-icon-button:active {
+	border: 2px solid #25b5c2;
+}
+
+.topcoat-icon-button:hover {
+	background-color: black;
+}
+
 .topcoat-icon-button--quiet {
 	color: #25b5c2;	
 	border-radius: 50%;

@@ -3,7 +3,7 @@
 		<!-- <h3 class="topcoat-list__header list-header main-color">A</h3> -->
 
 		<ons-list-item>
-			<ons-search-input ng-model="query.text"></ons-search-input>
+			<ons-search-input ng-model="query.text" class="full line-height bg-white-30 radius-6" placeholder="Search"></ons-search-input>
 		</ons-list-item>
 
 		<ons-list-item ng-repeat="artist in artistList | filter:query.text" ng-click="showDetail(artist)">
@@ -12,9 +12,9 @@
 				<div class="list-item-title">
 					{{artist.artist_name}}
 				</div>
-				<div class="list-item-subtitle">
+				<!-- <div class="list-item-subtitle">
 					00 songs
-				</div>
+				</div> -->
 			</div>
 			<img class="float-right list-arrow" src="icons/play.png" alt="">
 			<div class="clear-float"></div>
