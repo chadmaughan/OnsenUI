@@ -27,11 +27,10 @@
 				this.status = MEDIA_STARTING;
 
 				this.media.addEventListener('play', $.proxy(this.onPlay, this));
-
 				this.media.addEventListener('pause', $.proxy(this.onPause, this));
-
 				this.media.addEventListener('ended', $.proxy(this.onEnded, this));
 				this.media.addEventListener('timeupdate', $.proxy(this.onTimeUpdate, this));
+				// this.media.addEventListener('progress', $.proxy(this.onProgress, this));
 			};
 
 			this.onPlay = function() {
@@ -42,26 +41,34 @@
 				});
 			};
 
-			this.onPause = function(){
+			this.onPause = function() {
 				var that = this;
 				this.$scope.$apply(function() {
 					that.status = MEDIA_PAUSED;
 				});
 			};
 
-			this.onEnded = function(){
+			this.onEnded = function() {
 				var that = this;
 				this.$scope.$apply(function() {
 					that.status = MEDIA_ENDED;
 				});
 			};
 
-			this.onTimeUpdate = function(event){
+			this.onTimeUpdate = function() {
 				var that = this;
 				this.$scope.$apply(function() {
 					that.currentPosition = that.media.currentTime;
 				});
 			};
+
+			// this.onProgress = function() {
+			// 	console.log('progress', event);
+			// 	var that = this;
+			// 	this.$scope.$apply(function() {
+			// 		that.buffered = that.media.buffered.end(0);
+			// 	});
+			// };
 
 
 			this.pause = function() {

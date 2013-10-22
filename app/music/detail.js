@@ -46,7 +46,7 @@ Play Music
                 if ($scope.volume < 100) {
                     $scope.volume++;
                     setTimeout(function() {
-                        Player.setMusicVolume($scope.volume);
+                        Player.setVolume($scope.volume);
                     }, 0);
                 }
             };            
