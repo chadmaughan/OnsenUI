@@ -23,7 +23,7 @@
 				}
 			};
 
-			this.setMusicVolume = function(vl) {
+			this.setVolume = function(vl) {
                 vl = vl / 100;
                 if (this.media) {
                     this.media.setVolume(vl);

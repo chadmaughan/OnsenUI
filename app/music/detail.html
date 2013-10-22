@@ -12,6 +12,11 @@
         <span>{{music.duration | human_time}}</span>
     </p>
 
+    <p style="color: white;">
+    	Player: {{player.status}}
+    	
+    </p>
+
     <div style="color: white; margin-top:100px;">
         <skewed-progress class="full" value="{{player.currentPosition}}" max="{{music.duration}}" left-text="{{player.currentPosition | human_time}}" right-text="{{music.duration | human_time}}"></skewed-progress>
     </div>
@@ -31,9 +36,9 @@
 	<div class="music-controls">
 		<div class="relative">			
 			<div class="topcoat-icon-button round music-button white-border bg-black play-button" ng-click="playOrPause(music.audio)">
-				<div ng-show="player.isPlaying()" ng-animate="'zoom-bounce'" class="music-control-icon absolute" style="background-image: url('icons/pause.png')"></div>
+				<div ng-show="player.status === player.MEDIA_STARTING || player.status === player.MEDIA_RUNNING" ng-animate="'zoom-bounce'" class="music-control-icon absolute" style="background-image: url('icons/pause.png')"></div>
 
-				<div ng-show="!player.isPlaying()" ng-animate="'zoom-bounce'" class="music-control-icon absolute" style="background-image: url('icons/play.png')"></div>
+				<div ng-show="player.status !== player.MEDIA_STARTING && player.status !== player.MEDIA_RUNNING" ng-animate="'zoom-bounce'" class="music-control-icon absolute" style="background-image: url('icons/play.png')"></div>
 			</div>
 			<div class="topcoat-icon-button round music-button white-border bg-black fast-forward-button" ng-click="pushForword()">
 				<div class="music-control-icon" style="background-image: url('icons/next.png')"></div>

@@ -9,7 +9,7 @@ Play Music
     app.controller('musicPlayController', ['$scope', '$rootScope', 'Data', 'Player',
         function($scope, $rootScope, Data, Player) {
 
-            $scope.volume = 95;
+            $scope.volume = 50;
             $scope.player = Player;
             $scope.music = Data.selectedMusic;
 
@@ -22,10 +22,13 @@ Play Music
 
             $scope.playOrPause = function(src) {
                 console.log('play or pause');
-                if (Player.isPlaying()) {
+                if (Player.status === Player.MEDIA_STARTING || Player.status === Player.MEDIA_RUNNING) {
                     Player.pause();
                 } else {
                     Player.play(src, $scope);
+                    setTimeout(function() {
+                        Player.setVolume($scope.volume);
+                    }, 0);
                 }
             };
 
@@ -33,7 +36,7 @@ Play Music
                 if ($scope.volume > 0) {
                     $scope.volume--;
                     setTimeout(function() {
-                        Player.setMusicVolume($scope.volume);
+                        Player.setVolume($scope.volume);
                     }, 0);
 
                 }
