@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="lib/onsen/css/topcoat-mobile-dark.css">  
   <link rel="stylesheet" href="styles/app.css"/>
   <link rel="stylesheet" href="styles/animation.css"/>
-  <link rel="stylesheet" href="js/circular_progress/circular_progress.css"/>
+  <link rel="stylesheet" href="js/directives/circular_progress/circular_progress.css"/>
   <script src="lib/jquery.js"></script>
 
   <script>
@@ -31,7 +31,7 @@
 
 <body class="max">    
   
-  <ons-screen class="max block" page="tabbar.html"></ons-screen>
+  <ons-screen class="max block" page="pages/tabbar.html"></ons-screen>
  
 
 
@@ -42,19 +42,21 @@
 
 
   <script src="js/app.js"></script>  
+  <script src="home.js"></script>  
   <script src="lib/angular_gestures.js"></script>  
-  <script src="js/filter/module.js"></script>
-  <script src="js/filter/to_human_time.js"></script>
+  <script src="js/filters/module.js"></script>
+  <script src="js/filters/to_human_time.js"></script>
   <script src="js/service.js"></script>
+  <script src="js/services/featured.js"></script>
   <script src="js/html5_audio_player_service.js"></script>  
 
-  <script src="js/my_directives.js"></script>        
-  <script src="js/circular_progress/circular-progress.js"></script>      
-  <script src="js/progress/progress.js"></script>      
-   <script src="js/skew_progress/progress.js"></script>      
-  <script src="tabbar.js"></script>  
-  <script src="playlist/playlist.js"></script>  
-  <script src="artist/list.js"></script>  
-  <script src="music/list.js"></script>  
-  <script src="music/detail.js"></script>  
+  <script src="js/directives/my_directives.js"></script>        
+  <script src="js/directives/circular_progress/circular-progress.js"></script>      
+  <script src="js/directives/progress/progress.js"></script>      
+   <script src="js/directives/skew_progress/progress.js"></script>      
+  <script src="pages/tabbar.js"></script>  
+  <script src="pages/playlist/playlist.js"></script>  
+  <script src="pages/artist/list.js"></script>  
+  <script src="pages/music/list.js"></script>  
+  <script src="pages/music/detail.js"></script>  
 </html>

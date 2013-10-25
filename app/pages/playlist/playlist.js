@@ -2,10 +2,12 @@
 
 	var app = angular.module('myApp');
 
-	app.controller('PlaylistController', ['$scope', 'Data',
-		function($scope, Data) {
+	app.controller('PlaylistController', ['$scope', 'Data', 'Featured',
+		function($scope, Data, Featured) {
 
 			init();
+
+			var featured = new Featured();
 
 			function init() {
 				$scope.query = {
@@ -37,9 +39,10 @@
 
 			$scope.showDetail = function(playlist) {
 				var selectedPlaylist = playlist;
-				Data.selectedPlaylist = selectedPlaylist;
+				// Data.selectedPlaylist = selectedPlaylist;
+				Data.selectedPlaylist = featured;
 				Data.type = "playlist";
-				$scope.ons.navigator.pushPage('music/list.html', playlist.name);
+				$scope.ons.navigator.pushPage('pages/music/list.html', playlist.name);
 			}
 
 

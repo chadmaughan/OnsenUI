@@ -20,16 +20,16 @@
 				tab4: false 
 			};
 
-			var defaultTab1 = 'icons/playlist_icon.png';
-			var defaultTab2 = 'icons/artist_icon.png';
-			var defaultTab3 = 'icons/music_icon.png';
-			var defaultTab4 = 'icons/info_icon.png';
+			var defaultTab1 = 'assets/icons/playlist_icon.png';
+			var defaultTab2 = 'assets/icons/artist_icon.png';
+			var defaultTab3 = 'assets/icons/music_icon.png';
+			var defaultTab4 = 'assets/icons/info_icon.png';
 
 			$scope.icons = {
-				tab1: 'icons/playlist_icon.png',
-				tab2: 'icons/artist_icon.png',
-				tab3: 'icons/music_icon.png',
-				tab4: 'icons/info_icon.png',
+				tab1: 'assets/icons/playlist_icon.png',
+				tab2: 'assets/icons/artist_icon.png',
+				tab3: 'assets/icons/music_icon.png',
+				tab4: 'assets/icons/info_icon.png',
 			}
 
 			$scope.activateTab = function(tab){

@@ -35,7 +35,7 @@ Artist List
                 var selectedArtist = artist;
                 Data.selectedArtist = selectedArtist;
                 Data.type = "Artist";
-                $scope.ons.navigator.pushPage('music/list.html', artist.artist_name);
+                $scope.ons.navigator.pushPage('pages/music/list.html', artist.artist_name);
             }
 
         }

@@ -1,22 +1,22 @@
 <div class="page ios7" ng-controller="TabbarController" style="background-image: url({{bg}}); background-position: center; background-size: cover;">
 	<ons-tabbar>
 
-		<ons-tabbar-item active="true" page="playlist/navigator.html" ng-click="$parent.activateTab('tab1')">
+		<ons-tabbar-item active="true" page="pages/playlist/navigator.html" ng-click="$parent.activateTab('tab1')">
 			<img class="tabbar-item round" ng-class="{active: status.tab1}" ng-src="{{icons.tab1}}" alt="">
 			<div class="tabbar-item-label">PLAYLIST</div>
 		</ons-tabbar-item>
 
-		<ons-tabbar-item page="artist/navigator.html" ng-click="$parent.activateTab('tab2')">
+		<ons-tabbar-item page="pages/artist/navigator.html" ng-click="$parent.activateTab('tab2')">
 			<img class="tabbar-item round" ng-class="{active: status.tab2}" ng-src="{{icons.tab2}}" alt="">
 			<div class="tabbar-item-label">ARTIST</div>
 		</ons-tabbar-item>
 
-		<ons-tabbar-item page="music/navigator.html" ng-click="$parent.activateTab('tab3')">
+		<ons-tabbar-item page="pages/music/navigator.html" ng-click="$parent.activateTab('tab3')">
 			<img class="tabbar-item round" ng-class="{active: status.tab3}" ng-src="{{icons.tab3}}">
 			<div class="tabbar-item-label">MUSIC</div>
 		</ons-tabbar-item>
 
-		<ons-tabbar-item page="about/navigator.html" ng-click="$parent.activateTab('tab4')">
+		<ons-tabbar-item page="pages/about/navigator.html" ng-click="$parent.activateTab('tab4')">
 			<img class="tabbar-item round" ng-class="{active: status.tab4}" ng-src="{{icons.tab4}}">
 			<div class="tabbar-item-label">ABOUT</div>
 		</ons-tabbar-item>

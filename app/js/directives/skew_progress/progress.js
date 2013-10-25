@@ -1,16 +1,18 @@
 (function() {
 
     var directiveModule = angular.module('myApp.directives');
-    directiveModule.directive("onsProgress", ['$timeout',
+    directiveModule.directive("skewedProgress", ['$timeout',
         function($timeout) {
             return {
                 restrict: 'E',
                 replace: true,
                 scope: {
                     value: "@",
-                    max: "@"
+                    max: "@",
+                    leftText: "@",
+                    rightText: "@"
                 },
-                templateUrl: 'js/progress/progress.tpl',
+                templateUrl: 'js/directives/skew_progress/progress.tpl',
                 link: function($scope, element, attributes) {
 
                     function calculatePercentage(){

@@ -9,7 +9,7 @@
                 scope: {
                     percentage: "@"
                 },
-                templateUrl: 'js/circular_progress/circular_progress.tpl',
+                templateUrl: 'js/directives/circular_progress/circular_progress.tpl',
                 link: function(scope, element, attributes) {
 
                     var wrapper = element;
