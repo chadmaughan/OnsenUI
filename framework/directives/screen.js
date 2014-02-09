@@ -41,15 +41,37 @@ limitations under the License.
 						this.attachMethods();
 
 						if (scope.page) {
-							scope.$parent.ons.screen.presentPage(scope.page);
+							this.onPageAttributeChanged(scope.page);							
 						}
 
 						attrs.$observe('page', function(page) {
-							console.log('page changed', page);
+							this.onPageAttributeChanged(page);													
+						}.bind(this));
+					},
+
+					onPageAttributeChanged: function(page){
+						var pageObject = scope.$eval(page);
+						if(pageObject && pageObject.method){
+							var method = pageObject.method;
+							switch(method){
+								case 'present' :
+									this.presentPage(pageObject.url);
+									break;
+
+								case 'dismiss' :
+									this.dismissPage();
+									break;
+
+								case 'reset' : 
+									this.resetToPage(pageObject.url);
+									break;
+							}
+							
+						}else{
 							if (page) {
 								this.resetToPage(page);
 							}
-						}.bind(this));
+						}	
 					},
 
 					onTransitionEnded: function() {
@@ -90,15 +112,29 @@ limitations under the License.
 						blackMask.removeClass('hide');
 					},
 
+					presentPage: function(page){
+						scope.$parent.ons.screen.presentPage(page);
+					},
+
+					dismissPage: function(){
+						scope.$parent.ons.screen.dismissPage();
+					},
+
 					resetToPage: function(pageUrl){
-						scope.$parent.ons.screen.presentPage(pageUrl);
-						for (var i = 0; i < screenItems.length - 1; i++) {
-							screenItems[i].pageElement.remove();
-						};										
+						if(!pageUrl){
+							throw new Error('page is undefied!')
+						}
+						element.empty();
+						screenItems = [];						
+						scope.$parent.ons.screen.presentPage(pageUrl);						
 					},
 
 					attachMethods: function() {
 						scope.$parent.ons.screen.presentPage = function(page) {
+							if(!page){
+								throw new Error('page is undefined!')
+							}
+
 							if (!this.isReady) {
 								console.log('not ready -> ignore');
 								return;
