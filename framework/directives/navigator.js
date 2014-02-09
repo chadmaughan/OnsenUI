@@ -450,7 +450,7 @@ limitations under the License.
 								}
 
 								page.append(templateHTML);
-								var pager = $compile(page)(scope);
+								var pager = $compile(page)(scope.$parent);
 								container.append(pager);
 
 								var navigatorItem = {
