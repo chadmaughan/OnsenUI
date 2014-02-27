@@ -15,68 +15,104 @@ limitations under the License.
 
 */
 
-.navigator-toolbar__content {
-  width: 100%;
-  height: 100%;
+.onsen-slide-animation.ng-animate {
+  transition-duration: 400ms;
+  transition-delay: 10ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
 }
 
-.onsen_navigator-pager {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.onsen-slide-animation.ng-enter {    
+  transform: translate3d(100%, 0, 0);
 }
 
-.onsen_navigator-black-mask {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: black;
+.onsen-slide-animation.ng-enter-active {  
+  transform: translate3d(0, 0, 0);
 }
 
-.onsen_navigator-pager.navigate_left {
-    transform: translate3d(-25%, 0, 0);    
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2);*/    
+.onsen-slide-animation.ng-leave {  
+  transform: translate3d(0, 0, 0);
 }
 
-.onsen_navigator-pager.navigate_left .navigator-page {
+.onsen-slide-animation.ng-leave-active {  
+  transform: translate3d(100%, 0, 0);
+}
+
+
+
+/*.onsen-slide-animation.ng-leave .navigator-page {
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
   opacity: 0.9;
 }
 
-.onsen_navigator-pager.navigator_center {
-    transform: translate3d(0, 0, 0);
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02);*/
-}
-
-.onsen_navigator-pager.navigator_center .navigator-page {
+.onsen-slide-animation.ng-leave-active .navigator-page {  
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
   opacity: 1;
+}*/
+
+/*.onsen-partial-fade-animation {
+  animation: onsen-partial-fade-add 400ms cubic-bezier(.1, .7, .1, 1);
 }
 
-.onsen_navigator-pager.navigate_right {
-    transform: translate3d(100%, 0, 0);
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2);*/
+@keyframes onsen-partial-fade-add {
+  0% {
+     opacity: 1;
+  }  
+  100% {
+    opacity: 0.9;
+  }
 }
 
-.onsen_navigator-pager.transition {
-    transition-duration: 400ms;
-    animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+.onsen-partial-fade-animation {
+  opacity: 0.9;
 }
 
-.onsen_navigator-pager .navigator-page {
-    transition-duration: 400ms;
-    animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+.onsen-partial-fade-animation-remove {
+  animation: onsen-partial-fade-remove 400ms cubic-bezier(.1, .7, .1, 1);
 }
 
-.onsen_navigator-title {    
-  width: 44%;
-  left: 28%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+@keyframes onsen-partial-fade-remove {
+  0% {
+     opacity: 0.9;
+  }  
+  100% {
+    opacity: 1;
+  }
+}*/
+
+.onsen-slide-partial-animation-add {
+  animation: onsen-slide-partial-add 400ms cubic-bezier(.1, .7, .1, 1);
 }
+
+@keyframes onsen-slide-partial-add {
+  0% {
+     transform: translate3d(0, 0, 0);
+  }  
+  100% {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+.onsen-slide-partial-animation-remove {
+  animation: onsen-slide-partial-remove 400ms cubic-bezier(.1, .7, .1, 1);
+}
+
+@keyframes onsen-slide-partial-remove {
+  0% {
+     transform: translate3d(-25%, 0, 0);
+  }  
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/*.onsen-slide-partial-animation .navigator-page {
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+  opacity: 0.9;
+}*/
+
 
 .onsen_navigator-title.animate-right {
   transform: translateX(100%); opacity: 0;
@@ -90,11 +126,7 @@ limitations under the License.
   transform: translateX(-36%); opacity: 0;
 }
 
-.onsen_navigator-item {
-  position: absolute !important;
-  top: 0;
-  bottom: 1px;
-}
+
 
 /* TODO: */
 .onsen_navigator-title.transition {
@@ -116,17 +148,7 @@ limitations under the License.
 }
 
 
-.onsen_navigator__left-button-container {   
-  left: 0;
-  width: 20px;
-  text-align: right;
-}
 
-.onsen_fade {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 
 .onsen_fade.transition{
   transition-duration: 400ms;
@@ -142,22 +164,6 @@ limitations under the License.
   opacity: 0;
 }
 
-.onsen_navigator__right-button {
-  position: absolute;
-  right: 10px;
-  width: 13%;
-  bottom: 0;
-}
-
-
-.onsen_navigator-back-label {
-    font-weight: lighter !important;
-    width: 25%;
-    left: 0;
-    text-align: left !important;
-    margin-left: 25px !important;
-    padding-left: 0 !important;
-}
 
 .onsen_navigator-back-label.transition {
     transition-duration: 400ms;

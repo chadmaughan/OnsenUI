@@ -70,7 +70,7 @@ limitations under the License.
 						setTimeout(function() {
 							pager.attr("class", "screen-page transition screen_center");
 							this.animateInBehindPage();
-						}.bind(this), 0);
+						}.bind(this), 1000);
 
 					},
 
@@ -84,7 +84,7 @@ limitations under the License.
 					},
 
 					onPageAdded: function(page){
-						var blackMask = angular.element(page[0].querySelector('.onsen_screen-black-mask'));
+						// var blackMask = angular.element(page[0].querySelector('.onsen_screen-black-mask'));
 						// blackMask.removeClass('hide');
 					},
 
@@ -107,9 +107,9 @@ limitations under the License.
 							var pageEl = angular.element('<div></div>');
 							pageEl.addClass('screen-page');
 
-							var blackMask = angular.element('<div></div>');
-							blackMask.addClass('onsen_screen-black-mask hide');
-							pageEl.append(blackMask);
+							// var blackMask = angular.element('<div></div>');
+							// blackMask.addClass('onsen_screen-black-mask hide');
+							// pageEl.append(blackMask);
 
 							var pageContainer = angular.element('<div></div>');
 							pageContainer.addClass('screen-page__container');

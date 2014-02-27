@@ -1,4 +1,4 @@
-/*! onsenui - v1.0.0 - 2014-02-17 */
+/*! onsenui - v1.0.0 - 2014-02-27 */
 /*
 Copyright 2013 ASIAL CORPORATION, KRUY VANNA, HIROSHI SHIKATA
 
@@ -26,6 +26,7 @@ html {
 body {
     width: 100%;
     height: 100%;
+    position: fixed;    
 }
 
 .align-center {
@@ -71,6 +72,8 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 } 
 
 input {
@@ -92,134 +95,6 @@ select {
     -moz-user-select: initial;
     -ms-user-select: initial;
     user-select: initial;   
-}
-/*
-Copyright 2013 ASIAL CORPORATION, KRUY VANNA, HIROSHI SHIKATA
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-*/
-
-
-.zoom-show {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 0;
-  -webkit-transform: scale(0.6);
-}
-
-.zoom-show.zoom-show-active {
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-hide {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-hide.zoom-hide-active {
-  opacity: 0;
-  -webkit-transform: scale(0.2);
-}
-
-.zoom-enter {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 0;
-  -webkit-transform: scale(0.6);
-}
-
-.zoom-enter.zoom-enter-active {
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-leave {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-leave.zoom-leave-active {
-  opacity: 0;
-  -webkit-transform: scale(0.2);
-}
-
-
-.zoom-big-show {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 0;
-  -webkit-transform: scale(0.2);
-}
-
-.zoom-big-show.zoom-big-show-active {
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-big-hide {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  opacity: 1;
-  -webkit-transform: scale(1.0);
-}
-
-.zoom-big-hide.zoom-big-hide-active {
-  opacity: 0.1;
-  -webkit-transform: scale(0.6);
-}
-
-
-
-.reveal-show {
-  -webkit-transition: .5s ease-out all .005s; /* Chrome */
-  max-height: 0;
-}
-
-.reveal-show.reveal-show-active {
-  max-height: 500px;
-}
-
-.reveal-hide {
-  -webkit-transition: .3s ease-out all .001s; /* Chrome */
-  max-height: 500px;
-}
-
-.reveal-hide.reveal-hide-active {
-  max-height: 0;
-}
-
-
-
-.slide-enter {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  line-height: 0;
-  -webkit-transform: scale(0.6);
-}
-
-.slide-enter.slide-enter-active {
-  line-height: 100%;
-  -webkit-transform: scale(1.0);
-}
-
-.slide-leave {
-  -webkit-transition: .25s ease all .001s; /* Chrome */
-  line-height: 100%;
-  -webkit-transform: scale(1.0);
-}
-
-.slide-leave.slide-leave-active {
-  line-height: 0;
-  -webkit-transform: scale(0.2);
 }
 /*
 Copyright 2013 ASIAL CORPORATION, KRUY VANNA, HIROSHI SHIKATA
@@ -343,75 +218,139 @@ limitations under the License.
 
 */
 
-.navigator-toolbar__content {
-  width: 100%;
-  height: 100%;
+.onsen-slide-animation.ng-animate {
+  -webkit-transition-duration: 400ms;
+  transition-duration: 400ms;
+  -webkit-transition-delay: 10ms;
+  transition-delay: 10ms;
+  -webkit-animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
 }
 
-.onsen_navigator-pager {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.onsen-slide-animation.ng-enter {    
+  -webkit-transform: translate3d(100%, 0, 0);    
+  transform: translate3d(100%, 0, 0);
 }
 
-.onsen_navigator-black-mask {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: black;
+.onsen-slide-animation.ng-enter-active {  
+  -webkit-transform: translate3d(0, 0, 0);  
+  transform: translate3d(0, 0, 0);
 }
 
-.onsen_navigator-pager.navigate_left {
-    -webkit-transform: translate3d(-25%, 0, 0);
-    transform: translate3d(-25%, 0, 0);    
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2);*/    
+.onsen-slide-animation.ng-leave {  
+  -webkit-transform: translate3d(0, 0, 0);  
+  transform: translate3d(0, 0, 0);
 }
 
-.onsen_navigator-pager.navigate_left .page {
+.onsen-slide-animation.ng-leave-active {  
+  -webkit-transform: translate3d(100%, 0, 0);  
+  transform: translate3d(100%, 0, 0);
+}
+
+
+
+/*.onsen-slide-animation.ng-leave .navigator-page {
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
   opacity: 0.9;
 }
 
-.onsen_navigator-pager.navigator_center {
+.onsen-slide-animation.ng-leave-active .navigator-page {  
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+  opacity: 1;
+}*/
+
+/*.onsen-partial-fade-animation {
+  animation: onsen-partial-fade-add 400ms cubic-bezier(.1, .7, .1, 1);
+}
+
+@keyframes onsen-partial-fade-add {
+  0% {
+     opacity: 1;
+  }  
+  100% {
+    opacity: 0.9;
+  }
+}
+
+.onsen-partial-fade-animation {
+  opacity: 0.9;
+}
+
+.onsen-partial-fade-animation-remove {
+  animation: onsen-partial-fade-remove 400ms cubic-bezier(.1, .7, .1, 1);
+}
+
+@keyframes onsen-partial-fade-remove {
+  0% {
+     opacity: 0.9;
+  }  
+  100% {
+    opacity: 1;
+  }
+}*/
+
+.onsen-slide-partial-animation-add {
+  -webkit-animation: onsen-slide-partial-add 400ms cubic-bezier(.1, .7, .1, 1);
+  animation: onsen-slide-partial-add 400ms cubic-bezier(.1, .7, .1, 1);
+}
+
+@-webkit-keyframes onsen-slide-partial-add {
+  0% {
+     -webkit-transform: translate3d(0, 0, 0);
+     transform: translate3d(0, 0, 0);
+  }  
+  100% {
+    -webkit-transform: translate3d(-25%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+@keyframes onsen-slide-partial-add {
+  0% {
+     -webkit-transform: translate3d(0, 0, 0);
+     transform: translate3d(0, 0, 0);
+  }  
+  100% {
+    -webkit-transform: translate3d(-25%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+.onsen-slide-partial-animation-remove {
+  -webkit-animation: onsen-slide-partial-remove 400ms cubic-bezier(.1, .7, .1, 1);
+  animation: onsen-slide-partial-remove 400ms cubic-bezier(.1, .7, .1, 1);
+}
+
+@-webkit-keyframes onsen-slide-partial-remove {
+  0% {
+     -webkit-transform: translate3d(-25%, 0, 0);
+     transform: translate3d(-25%, 0, 0);
+  }  
+  100% {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02);*/
+  }
 }
 
-.onsen_navigator-pager.navigator_center .page {
-  opacity: 1;
+@keyframes onsen-slide-partial-remove {
+  0% {
+     -webkit-transform: translate3d(-25%, 0, 0);
+     transform: translate3d(-25%, 0, 0);
+  }  
+  100% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-.onsen_navigator-pager.navigate_right {
-    -webkit-transform: translate3d(100%, 0, 0);
-    transform: translate3d(100%, 0, 0);
-    /*box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2);*/
-}
+/*.onsen-slide-partial-animation .navigator-page {
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+  opacity: 0.9;
+}*/
 
-.onsen_navigator-pager.transition {
-    -webkit-transition-duration: 400ms;
-    transition-duration: 400ms;
-    -webkit-animation-timing-function: cubic-bezier(.1, .7, .1, 1);
-    animation-timing-function: cubic-bezier(.1, .7, .1, 1);
-}
-
-.onsen_navigator-pager .page {
-    -webkit-transition-duration: 400ms;
-    transition-duration: 400ms;
-    -webkit-animation-timing-function: cubic-bezier(.1, .7, .1, 1);
-    animation-timing-function: cubic-bezier(.1, .7, .1, 1);
-}
-
-.onsen_navigator-title {    
-  width: 44%;
-  left: 28%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
 
 .onsen_navigator-title.animate-right {
   -webkit-transform: translateX(100%);
@@ -428,11 +367,7 @@ limitations under the License.
   transform: translateX(-36%); opacity: 0;
 }
 
-.onsen_navigator-item {
-  position: absolute !important;
-  top: 0;
-  bottom: 1px;
-}
+
 
 /* TODO: */
 .onsen_navigator-title.transition {
@@ -449,8 +384,6 @@ limitations under the License.
   animation-timing-function: cubic-bezier(.99,.01,.99,.01);
 }
 
-
-
 .onsen_navigator__left-button-container.hide {
   opacity: 0;
 }
@@ -460,17 +393,7 @@ limitations under the License.
 }
 
 
-.onsen_navigator__left-button-container {   
-  left: 0;
-  width: 20px;
-  text-align: right;
-}
 
-.onsen_fade {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 
 .onsen_fade.transition{
   -webkit-transition-duration: 400ms;
@@ -489,22 +412,6 @@ limitations under the License.
   opacity: 0;
 }
 
-.onsen_navigator__right-button {
-  position: absolute;
-  right: 10px;
-  width: 13%;
-  bottom: 0;
-}
-
-
-.onsen_navigator-back-label {
-    font-weight: lighter !important;
-    width: 25%;
-    left: 0;
-    text-align: left !important;
-    margin-left: 25px !important;
-    padding-left: 0 !important;
-}
 
 .onsen_navigator-back-label.transition {
     -webkit-transition-duration: 400ms;
@@ -1081,6 +988,29 @@ ons-navigator {
     flex: 0 0 auto;
 }
 
+.navigator-toolbar__content {
+  width: 100%;
+  height: 100%;
+}
+
+.onsen_navigator-pager {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.onsen_navigator-black-mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: black;
+}
+
+
 .navigator-content {
     -webkit-box-ordinal-group: 1;
     -moz-box-ordinal-group: 1;    
@@ -1094,19 +1024,63 @@ ons-navigator {
     overflow: hidden;
 }
 
+.onsen_navigator-title {    
+  width: 44%;
+  left: 28%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.onsen_navigator-item {
+  position: absolute !important;
+  top: 0;
+  bottom: 1px;
+}
+
 .topcoat-navigation-bar {    
     padding-left: 0 !important;
     padding-right: 0 !important;
 
 }
 
-#right-section-icon {
+.right-section-icon {
     height: 100%;
-    display: block;
+    display: block !important;
 }
 
-#left-section {
+.left-section {
     height: 100%;
+}
+
+
+.onsen_navigator__left-button-container {   
+  left: 0;
+  width: 20px;
+  text-align: right;
+}
+
+.onsen_fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.onsen_navigator__right-button {
+  position: absolute;
+  right: 10px;
+  width: 13%;
+  bottom: 0;
+}
+
+
+.onsen_navigator-back-label {
+    font-weight: lighter !important;
+    width: 25%;
+    left: 0;
+    text-align: left !important;
+    margin-left: 25px !important;
+    padding-left: 0 !important;
 }
 .page {
     position: absolute;
@@ -1148,7 +1122,6 @@ limitations under the License.
 
 .scroller {    
     min-height: 105%;
-    padding-bottom: 50px;
 }
 
 ::-webkit-scrollbar {

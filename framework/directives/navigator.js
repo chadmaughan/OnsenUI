@@ -20,8 +20,8 @@ limitations under the License.
 (function() {
 	'use strict';
 	var directives = angular.module('onsen.directives');
-
-	directives.directive('onsNavigator', function(ONSEN_CONSTANTS, $http, $compile, $parse, NavigatorStack) {
+	
+	directives.directive('onsNavigator', function(ONSEN_CONSTANTS, $http, $compile, $parse, NavigatorStack, $animate) {
 		return {
 			restrict: 'E',
 			replace: false,
@@ -61,10 +61,14 @@ limitations under the License.
 					init: function() {
 						this.setReady(true);
 
-						leftButtonContainer.bind('touchend', function(){   // fix android 2.3 click event not fired some times when used with sliding menu
+						leftButtonContainer.bind('touchend', function() { // fix android 2.3 click event not fired some times when used with sliding menu
 						});
 
-						leftButtonContainer.bind('click', this.onLeftButtonClicked.bind(this));
+						leftButtonContainer.bind('click', function(){
+							scope.$apply(function(){
+								this.onLeftButtonClicked();
+							}.bind(this));
+						}.bind(this));
 						this.attachFastClickEvent(leftSection[0]);
 						rightSection.bind('click', this.onRightButtonClicked.bind(this));
 						this.attachFastClickEvent(rightSection[0]);
@@ -89,7 +93,7 @@ limitations under the License.
 						this.attachScopeMethods();
 					},
 
-					attachScopeMethods: function(){
+					attachScopeMethods: function() {
 						scope.pushPage = this.pushPage.bind(this);
 						scope.popPage = this.popPage.bind(this);
 						scope.resetToPage = this.resetToPage.bind(this);
@@ -133,7 +137,11 @@ limitations under the License.
 						var title = outNavigatorItem.options.title;
 						var inBackLabel = angular.element('<div></div>');
 						inBackLabel.addClass('onsen_navigator-back-label onsen_navigator-item topcoat-navigation-bar__line-height navigate_right');
-						inBackLabel.bind('click', this.onLeftButtonClicked.bind(this));
+						inBackLabel.bind('click', function(){
+							scope.$apply(function(){
+								this.onLeftButtonClicked();
+							}.bind(this));
+						}.bind(this));
 						this.attachFastClickEvent(inBackLabel[0]);
 						inNavigatorItem.backLabel = inBackLabel;
 						if (inNavigatorItem.options.leftButtonIcon) {
@@ -182,7 +190,11 @@ limitations under the License.
 							toolbarContent[0].offsetWidth;
 							inLabel.removeClass('navigate_left');
 							inLabel.addClass('transition navigate_center');
-							inLabel.bind('click', this.onLeftButtonClicked.bind(this));
+							inLabel.bind('click', function(){
+								scope.$apply(function(){
+									this.onLeftButtonClicked();
+								}.bind(this));
+							}.bind(this));
 							this.attachFastClickEvent(inLabel[0]);
 						}
 					},
@@ -194,7 +206,7 @@ limitations under the License.
 					onLeftButtonClicked: function() {
 						var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
 						if (onLeftButtonClick) {
-							var onLeftButtonClickFn = $parse(onLeftButtonClick);							
+							var onLeftButtonClickFn = $parse(onLeftButtonClick);
 							onLeftButtonClickFn(scope.$parent);
 						} else {
 							if (this.canPopPage()) {
@@ -341,34 +353,35 @@ limitations under the License.
 						inTitleElement.addClass('animate-center');
 					},
 
-					animatePageIn: function(inPage, outPage) {
+					animatePageIn: function(parent, inPage, outPage) {
 						var that = this;
-						inPage.bind(TRANSITION_END, function transitionEnded(e) {
+
+						// var navigatorPage = angular.element(outPage[0].querySelector('.navigator-page'));
+						// $animate.addClass(navigatorPage, 'onsen-partial-fade-animation');
+
+						$animate.enter(inPage, parent, outPage, function() {							
 							that.onTransitionEnded();
 						});
 
-						element[0].offsetWidth;
-						inPage.attr("class", "onsen_navigator-pager transition navigator_center");
-						outPage.attr("class", "onsen_navigator-pager transition navigate_left");
+						// $animate.addClass(outPage, 'onsen-slide-partial-animation');																		
 					},
 
-					animatePageOut: function(currentPage, previousPage) {
-						previousPage.attr("class", "onsen_navigator-pager navigate_left");
-						element[0].offsetWidth;
-						previousPage.attr("class", "onsen_navigator-pager transition navigator_center");
-
-						var that = this;
-						currentPage.bind(TRANSITION_END, function transitionEnded(e) {
+					animatePageOut: function(currentPage, previousPage) {						
+						$animate.leave(currentPage, function(){
+							console.log('leave done');
 							var currentPageScope = currentPage.scope();
-							if(currentPageScope){
+							if (currentPageScope) {
 								currentPageScope.$destroy();
 							}
-							currentPage.remove();
-							currentPage.unbind(transitionEnded);
-							that.onTransitionEnded();
-						});
 
-						currentPage.attr("class", "onsen_navigator-pager transition navigate_right");
+							this.onTransitionEnded();
+						}.bind(this));
+
+						var navigatorPage = angular.element(previousPage[0].querySelector('.navigator-page'));
+						$animate.removeClass(navigatorPage, 'onsen-partial-fade-animation');
+
+						$animate.removeClass(previousPage, 'onsen-slide-partial-animation');
+																		
 					},
 
 					isEmpty: function() {
@@ -378,7 +391,7 @@ limitations under the License.
 					canPopPage: function() {
 						return navigatorItems.length > 1;
 					},
-					
+
 					resetToPage: function(page, options) {
 						if (!this.isReady()) {
 							return;
@@ -403,7 +416,7 @@ limitations under the License.
 					},
 
 					pushPage: function(page, options) {
-						if(options && typeof options != "object"){
+						if (options && typeof options != "object") {
 							throw new Error('options must be an objected. You supplied ' + options);
 						}
 						if (!this.isReady()) {
@@ -422,7 +435,7 @@ limitations under the License.
 							console.error(e);
 						}).success(function(data, status, headers, config) {
 							var page = angular.element('<div></div>');
-							page.addClass('onsen_navigator-pager');
+							page.addClass('onsen_navigator-pager onsen-slide-animation');
 							var blackMask = angular.element('<div></div>');
 							blackMask.addClass('onsen_navigator-black-mask');
 							page.append(blackMask);
@@ -449,12 +462,12 @@ limitations under the License.
 								options.onRightButtonClick = options.onRightButtonClick || onRightButtonClick;
 
 								$navigatorToolbar.remove();
-							}							
+							}
 
 							page.append(templateHTML);
 							var pageScope = scope.$parent.$new();
 							var pager = $compile(page)(pageScope);
-							container.append(pager);
+							// container.append(pager);
 
 							var navigatorItem = {
 								page: pager,
@@ -465,18 +478,22 @@ limitations under the License.
 							if (!this.isEmpty()) {
 								var previousNavigatorItem = navigatorItems[navigatorItems.length - 1];
 								var previousPage = previousNavigatorItem.page;
-								pager.addClass('navigate_right');
-								
-								setTimeout(function(){
-									this.animatePageIn(pager, previousPage);
-									this.animateTitleIn(navigatorItem, previousNavigatorItem);
+								// pager.addClass('navigate_right');
 
-									this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
-									this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
-								}.bind(this), 0);
-								
+								setTimeout(function() {
+									scope.$apply(function(){
+										this.animatePageIn(container, pager, previousPage);
+										this.animateTitleIn(navigatorItem, previousNavigatorItem);
+
+										this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
+										this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
+									}.bind(this));
+									
+								}.bind(this), 100);
+
 							} else {
 								// root page
+								container.append(pager);
 								var titleElement = angular.element('<div></div>');
 								titleElement.addClass('onsen_navigator-item onsen_navigator-title topcoat-navigation-bar__line-height center animate-center');
 								if (options.title) {
@@ -514,13 +531,13 @@ limitations under the License.
 						this.setLeftButton(previousNavigatorItem);
 						this.animateRightButtonOut(previousNavigatorItem, currentNavigatorItem);
 						currentNavigatorItem.pageScope.$destroy();
-					}					
+					}
 				});
 
 				var navigator = new Navigator();
 
-				NavigatorStack.addNavigator(scope);				
-				scope.$on('$destroy', function(){
+				NavigatorStack.addNavigator(scope);
+				scope.$on('$destroy', function() {
 					NavigatorStack.removeNavigator(scope);
 				});
 			}

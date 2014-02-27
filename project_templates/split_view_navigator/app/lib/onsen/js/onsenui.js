@@ -1,4 +1,4 @@
-/*! onsenui - v1.0.0 - 2014-02-17 */
+/*! onsenui - v1.0.0 - 2014-02-27 */
 angular.module('templates-main', ['templates/bottom_toolbar.tpl', 'templates/button.tpl', 'templates/checkbox.tpl', 'templates/column.tpl', 'templates/icon.tpl', 'templates/if_orientation.tpl', 'templates/if_platform.tpl', 'templates/list.tpl', 'templates/list_item.tpl', 'templates/navigator.tpl', 'templates/navigator_toolbar.tpl', 'templates/page.tpl', 'templates/radio_button.tpl', 'templates/row.tpl', 'templates/screen.tpl', 'templates/scroller.tpl', 'templates/search_input.tpl', 'templates/select.tpl', 'templates/sliding_menu.tpl', 'templates/split_view.tpl', 'templates/tab_bar.tpl', 'templates/tab_bar_item.tpl', 'templates/text_area.tpl', 'templates/text_input.tpl']);
 
 angular.module("templates/bottom_toolbar.tpl", []).run(["$templateCache", function($templateCache) {
@@ -77,12 +77,12 @@ angular.module("templates/navigator.tpl", []).run(["$templateCache", function($t
     "	<div ng-hide=\"hideToolbar\" class=\"topcoat-navigation-bar no-select navigator-toolbar relative\">	 \n" +
     "		<div class=\"navigator-toolbar__content relative\">\n" +
     "			<div class=\"onsen_navigator-item topcoat-navigation-bar__bg onsen_navigator__left-button-container transition hide\">\n" +
-    "				<span id=\"left-section\" class=\"topcoat-icon-button--quiet\">\n" +
+    "				<span class=\"topcoat-icon-button--quiet left-section\">\n" +
     "					<i class=\"fa fa-angle-left fa-2x topcoat-navigation-bar__line-height\"></i>\n" +
     "				</span>			\n" +
     "			</div>		\n" +
     "			<div class=\"onsen_navigator__right-button onsen_navigator-item\">\n" +
-    "				<span id=\"right-section-icon\" class=\"topcoat-icon-button--quiet\">\n" +
+    "				<span class=\"topcoat-icon-button--quiet right-section-icon\">\n" +
     "				</span>\n" +
     "\n" +
     "			</div>\n" +
@@ -130,9 +130,7 @@ angular.module("templates/scroller.tpl", []).run(["$templateCache", function($te
   $templateCache.put("templates/scroller.tpl",
     "<div class=\"scroller-wrapper full-screen page\" ons-scrollable>\n" +
     "	<div class=\"scroller\">\n" +
-    "		<div ng-transclude>\n" +
-    "			\n" +
-    "		</div>		\n" +
+    "		\n" +
     "	</div>\n" +
     "</div>");
 }]);
@@ -175,9 +173,9 @@ angular.module("templates/split_view.tpl", []).run(["$templateCache", function($
 
 angular.module("templates/tab_bar.tpl", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/tab_bar.tpl",
-    "  <ng-include src=\"selectedTabItem.source\" style=\"margin-bottom: {{tabbarHeight}}\" class=\"tab-bar-content\">\n" +
+    "  <div style=\"margin-bottom: {{tabbarHeight}}\" class=\"tab-bar-content\">\n" +
     "    \n" +
-    "  </ng-include>\n" +
+    "  </div>\n" +
     "  <div ng-hide=\"hideTabs\" class=\"topcoat-tab-bar full footer\" ng-transclude>         \n" +
     "  </div>\n" +
     "\n" +
@@ -187,9 +185,9 @@ angular.module("templates/tab_bar.tpl", []).run(["$templateCache", function($tem
 angular.module("templates/tab_bar_item.tpl", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/tab_bar_item.tpl",
     "<label class=\"topcoat-tab-bar__item no-select\">\n" +
-    "	<input type=\"radio\" name=\"tab-bar\">\n" +
+    "	<input type=\"radio\" name=\"tab-bar-{{tabbarId}}\">\n" +
     "	<button class=\"topcoat-tab-bar__button full\" ng-click=\"setActive()\">\n" +
-    "		<i ng-show=\"icon != undefined\" class=\"fa fa-2x fa-{{icon}} {{icon}}\"></i>\n" +
+    "		<i ng-show=\"icon != undefined\" class=\"fa fa-2x fa-{{tabIcon}} {{tabIcon}}\"></i>\n" +
     "		<div class=\"onsen_tab-bar__label\" ng-class=\"{ big: icon === undefined }\">\n" +
     "			{{label}}\n" +
     "		</div>\n" +
@@ -232,6 +230,7 @@ limitations under the License.
 	directiveModules.run(function($rootScope) {
 		$rootScope.ons = $rootScope.ons || {};
 		$rootScope.ons.$get = function(id) {
+			id = id.replace('#', '');
 			return angular.element(document.getElementById(id)).isolateScope();
 		};
 
@@ -733,8 +732,8 @@ limitations under the License.
 (function() {
 	'use strict';
 	var directives = angular.module('onsen.directives');
-
-	directives.directive('onsNavigator', function(ONSEN_CONSTANTS, $http, $compile, $parse, NavigatorFactory) {
+	
+	directives.directive('onsNavigator', function(ONSEN_CONSTANTS, $http, $compile, $parse, NavigatorStack, $animate) {
 		return {
 			restrict: 'E',
 			replace: false,
@@ -752,6 +751,8 @@ limitations under the License.
 			// The linking function will add behavior to the template
 			link: function(scope, element, attrs) {
 
+				var TRANSITION_END = "webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd";
+
 				var leftButtonClick = attrs.onLeftButtonClick;
 				var rightButtonClick = attrs.onRightButtonClick;
 				var navigatorItems = [];
@@ -759,12 +760,12 @@ limitations under the License.
 				var container = angular.element(element[0].querySelector('.navigator-content'));
 				var toolbar = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
 				var toolbarContent = angular.element(element[0].querySelector('.navigator-toolbar__content'));
-				var leftSection = angular.element(toolbarContent[0].querySelector('#left-section'));
+				var leftSection = angular.element(toolbarContent[0].querySelector('.left-section'));
 				var leftButtonContainer = angular.element(toolbarContent[0].querySelector('.onsen_navigator__left-button-container'));
 				var leftArrow = angular.element(leftButtonContainer[0].querySelector('i'));
 
 				var rightSection = angular.element(toolbarContent[0].querySelector('.onsen_navigator__right-button'));
-				var rightSectionIcon = angular.element(rightSection[0].querySelector('#right-section-icon'));
+				var rightSectionIcon = angular.element(rightSection[0].querySelector('.right-section-icon'));
 
 				var leftButtonClickFn = $parse(scope.onLeftButtonClick);
 
@@ -772,10 +773,14 @@ limitations under the License.
 					init: function() {
 						this.setReady(true);
 
-						leftButtonContainer.bind('touchend', function(){   // fix android 2.3 click event not fired some times when used with sliding menu
+						leftButtonContainer.bind('touchend', function() { // fix android 2.3 click event not fired some times when used with sliding menu
 						});
 
-						leftButtonContainer.bind('click', this.onLeftButtonClicked.bind(this));
+						leftButtonContainer.bind('click', function(){
+							scope.$apply(function(){
+								this.onLeftButtonClicked();
+							}.bind(this));
+						}.bind(this));
 						this.attachFastClickEvent(leftSection[0]);
 						rightSection.bind('click', this.onRightButtonClicked.bind(this));
 						this.attachFastClickEvent(rightSection[0]);
@@ -800,7 +805,7 @@ limitations under the License.
 						this.attachScopeMethods();
 					},
 
-					attachScopeMethods: function(){
+					attachScopeMethods: function() {
 						scope.pushPage = this.pushPage.bind(this);
 						scope.popPage = this.popPage.bind(this);
 						scope.resetToPage = this.resetToPage.bind(this);
@@ -844,7 +849,11 @@ limitations under the License.
 						var title = outNavigatorItem.options.title;
 						var inBackLabel = angular.element('<div></div>');
 						inBackLabel.addClass('onsen_navigator-back-label onsen_navigator-item topcoat-navigation-bar__line-height navigate_right');
-						inBackLabel.bind('click', this.onLeftButtonClicked.bind(this));
+						inBackLabel.bind('click', function(){
+							scope.$apply(function(){
+								this.onLeftButtonClicked();
+							}.bind(this));
+						}.bind(this));
 						this.attachFastClickEvent(inBackLabel[0]);
 						inNavigatorItem.backLabel = inBackLabel;
 						if (inNavigatorItem.options.leftButtonIcon) {
@@ -860,7 +869,7 @@ limitations under the License.
 
 						var outLabel = outNavigatorItem.backLabel;
 						if (outLabel) {
-							outLabel.bind('webkitTransitionEnd', function transitionEnded(e) {
+							outLabel.bind(TRANSITION_END, function transitionEnded(e) {
 								outLabel.remove();
 								outLabel.unbind(transitionEnded);
 							});
@@ -878,7 +887,7 @@ limitations under the License.
 							// no back label if user specify icon
 							outLabel.remove();
 						} else {
-							outLabel.bind('webkitTransitionEnd', function transitionEnded(e) {
+							outLabel.bind(TRANSITION_END, function transitionEnded(e) {
 								outLabel.remove();
 								outLabel.unbind(transitionEnded);
 							});
@@ -893,7 +902,11 @@ limitations under the License.
 							toolbarContent[0].offsetWidth;
 							inLabel.removeClass('navigate_left');
 							inLabel.addClass('transition navigate_center');
-							inLabel.bind('click', this.onLeftButtonClicked.bind(this));
+							inLabel.bind('click', function(){
+								scope.$apply(function(){
+									this.onLeftButtonClicked();
+								}.bind(this));
+							}.bind(this));
 							this.attachFastClickEvent(inLabel[0]);
 						}
 					},
@@ -903,10 +916,9 @@ limitations under the License.
 					},
 
 					onLeftButtonClicked: function() {
-						console.log('left button clicked');
 						var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
 						if (onLeftButtonClick) {
-							var onLeftButtonClickFn = $parse(onLeftButtonClick);							
+							var onLeftButtonClickFn = $parse(onLeftButtonClick);
 							onLeftButtonClickFn(scope.$parent);
 						} else {
 							if (this.canPopPage()) {
@@ -940,7 +952,7 @@ limitations under the License.
 						inTitleElement.attr('class', 'onsen_navigator-item onsen_navigator-title topcoat-navigation-bar__line-height center transition animate-right');
 						var outTitleElement = outNavigatorItem.titleElement;
 						outTitleElement.after(inTitleElement);
-						outTitleElement.bind('webkitTransitionEnd', function transitionEnded(e) {
+						outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
 							outTitleElement.remove();
 							outTitleElement.unbind(transitionEnded);
 						});
@@ -960,7 +972,7 @@ limitations under the License.
 							} else {
 								rightButtonIconElement = angular.element('<i></i>');
 								rightButtonIconElement.addClass(inNavigatorItem.options.rightButtonIcon + ' topcoat-navigation-bar__line-height onsen_fade');
-								angular.element(toolbar[0].querySelector('#right-section-icon')).append(rightButtonIconElement); // fix bug on ios. strange that we cant use rightSectionIcon.append() here
+								rightSectionIcon.append(rightButtonIconElement); // fix bug on ios. strange that we cant use rightSectionIcon.append() here
 								inNavigatorItem.rightButtonIconElement = rightButtonIconElement;
 							}
 
@@ -973,7 +985,7 @@ limitations under the License.
 							var rightButton = outNavigatorItem.rightButtonIconElement;
 							rightButton.removeClass('show');
 							rightButton.addClass('transition hide');
-							rightButton.bind('webkitTransitionEnd', function transitionEnded(e) {
+							rightButton.bind(TRANSITION_END, function transitionEnded(e) {
 								rightButton.remove();
 								rightButton.unbind(transitionEnded);
 							});
@@ -987,7 +999,7 @@ limitations under the License.
 							toolbarContent[0].offsetWidth;
 							outRightButton.removeClass('show');
 							outRightButton.addClass('transition hide');
-							outRightButton.bind('webkitTransitionEnd', function transitionEnded(e) {
+							outRightButton.bind(TRANSITION_END, function transitionEnded(e) {
 								outRightButton.remove();
 								outRightButton.unbind(transitionEnded);
 							});
@@ -1043,7 +1055,7 @@ limitations under the License.
 						var outTitleElement = currentNavigatorItem.titleElement;
 						outTitleElement.after(inTitleElement);
 						element[0].offsetWidth;
-						outTitleElement.bind('webkitTransitionEnd', function transitionEnded(e) {
+						outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
 							outTitleElement.remove();
 							outTitleElement.unbind(transitionEnded);
 						});
@@ -1053,32 +1065,35 @@ limitations under the License.
 						inTitleElement.addClass('animate-center');
 					},
 
-					animatePageIn: function(inPage, outPage) {
-						inPage.attr("class", "onsen_navigator-pager navigate_right");
-
+					animatePageIn: function(parent, inPage, outPage) {
 						var that = this;
-						inPage.bind('webkitTransitionEnd', function transitionEnded(e) {
+
+						// var navigatorPage = angular.element(outPage[0].querySelector('.navigator-page'));
+						// $animate.addClass(navigatorPage, 'onsen-partial-fade-animation');
+
+						$animate.enter(inPage, parent, outPage, function() {							
 							that.onTransitionEnded();
 						});
 
-						element[0].offsetWidth;
-						inPage.attr("class", "onsen_navigator-pager transition navigator_center");
-						outPage.attr("class", "onsen_navigator-pager transition navigate_left");
+						// $animate.addClass(outPage, 'onsen-slide-partial-animation');																		
 					},
 
-					animatePageOut: function(currentPage, previousPage) {
-						previousPage.attr("class", "onsen_navigator-pager navigate_left");
-						element[0].offsetWidth;
-						previousPage.attr("class", "onsen_navigator-pager transition navigator_center");
+					animatePageOut: function(currentPage, previousPage) {						
+						$animate.leave(currentPage, function(){
+							console.log('leave done');
+							var currentPageScope = currentPage.scope();
+							if (currentPageScope) {
+								currentPageScope.$destroy();
+							}
 
-						var that = this;
-						currentPage.bind('webkitTransitionEnd', function transitionEnded(e) {
-							currentPage.remove();
-							currentPage.unbind(transitionEnded);
-							that.onTransitionEnded();
-						});
+							this.onTransitionEnded();
+						}.bind(this));
 
-						currentPage.attr("class", "onsen_navigator-pager transition navigate_right");
+						var navigatorPage = angular.element(previousPage[0].querySelector('.navigator-page'));
+						$animate.removeClass(navigatorPage, 'onsen-partial-fade-animation');
+
+						$animate.removeClass(previousPage, 'onsen-slide-partial-animation');
+																		
 					},
 
 					isEmpty: function() {
@@ -1088,7 +1103,7 @@ limitations under the License.
 					canPopPage: function() {
 						return navigatorItems.length > 1;
 					},
-					
+
 					resetToPage: function(page, options) {
 						if (!this.isReady()) {
 							return;
@@ -1113,8 +1128,10 @@ limitations under the License.
 					},
 
 					pushPage: function(page, options) {
+						if (options && typeof options != "object") {
+							throw new Error('options must be an objected. You supplied ' + options);
+						}
 						if (!this.isReady()) {
-							console.log('not ready => ignore');
 							return;
 						}
 
@@ -1130,12 +1147,13 @@ limitations under the License.
 							console.error(e);
 						}).success(function(data, status, headers, config) {
 							var page = angular.element('<div></div>');
-							page.addClass('onsen_navigator-pager');
+							page.addClass('onsen_navigator-pager onsen-slide-animation');
 							var blackMask = angular.element('<div></div>');
 							blackMask.addClass('onsen_navigator-black-mask');
 							page.append(blackMask);
 
 							var templateHTML = angular.element(data.trim());
+							templateHTML.addClass('navigator-page');
 
 							var navigatorToolbar = templateHTML[0].querySelector('ons-navigator-toolbar');
 							if (navigatorToolbar) {
@@ -1159,24 +1177,35 @@ limitations under the License.
 							}
 
 							page.append(templateHTML);
-							var pager = $compile(page)(scope.$parent);
-							container.append(pager);
+							var pageScope = scope.$parent.$new();
+							var pager = $compile(page)(pageScope);
+							// container.append(pager);
 
 							var navigatorItem = {
 								page: pager,
-								options: options || {}
+								options: options || {},
+								pageScope: pageScope
 							};
 
 							if (!this.isEmpty()) {
 								var previousNavigatorItem = navigatorItems[navigatorItems.length - 1];
 								var previousPage = previousNavigatorItem.page;
-								this.animatePageIn(pager, previousPage);
-								this.animateTitleIn(navigatorItem, previousNavigatorItem);
+								// pager.addClass('navigate_right');
 
-								this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
-								this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
+								setTimeout(function() {
+									scope.$apply(function(){
+										this.animatePageIn(container, pager, previousPage);
+										this.animateTitleIn(navigatorItem, previousNavigatorItem);
+
+										this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
+										this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
+									}.bind(this));
+									
+								}.bind(this), 100);
+
 							} else {
 								// root page
+								container.append(pager);
 								var titleElement = angular.element('<div></div>');
 								titleElement.addClass('onsen_navigator-item onsen_navigator-title topcoat-navigation-bar__line-height center animate-center');
 								if (options.title) {
@@ -1213,12 +1242,16 @@ limitations under the License.
 
 						this.setLeftButton(previousNavigatorItem);
 						this.animateRightButtonOut(previousNavigatorItem, currentNavigatorItem);
-					}					
+						currentNavigatorItem.pageScope.$destroy();
+					}
 				});
 
 				var navigator = new Navigator();
 
-				NavigatorFactory.addNavigator(scope);				
+				NavigatorStack.addNavigator(scope);
+				scope.$on('$destroy', function() {
+					NavigatorStack.removeNavigator(scope);
+				});
 			}
 
 		}
@@ -1227,8 +1260,8 @@ limitations under the License.
 (function() {
 	var directiveModules = angular.module('onsen.directives');
 
-	directiveModules.factory('NavigatorFactory', function($rootScope) {
-		var NavigatorFactory = Class.extend({
+	directiveModules.factory('NavigatorStack', function($rootScope) {
+		var NavigatorStack = Class.extend({
 			navigators: [],
 
 			init: function() {
@@ -1262,6 +1295,14 @@ limitations under the License.
 				this.navigators.push(navigator);
 			},
 
+			removeNavigator: function(navigator){
+				for (var i = 0; i < this.navigators.length; i++) {
+					if(this.navigators[i] == navigator){
+						this.navigators.splice(i, 1);
+					}
+				};
+			},
+
 			pushPage: function(page, options, $event) {
 				this._checkExistence();
 
@@ -1284,7 +1325,7 @@ limitations under the License.
 			}
 		});
 
-		return new NavigatorFactory();
+		return new NavigatorStack();
 	});
 })();
 /*
@@ -1461,16 +1502,18 @@ limitations under the License.
 	'use strict';
 	var directives = angular.module('onsen.directives');
 
-	directives.directive('onsScreen', function(ONSEN_CONSTANTS, $http, $compile, ScreenFactory) {
+	directives.directive('onsScreen', function(ONSEN_CONSTANTS, $http, $compile, ScreenStack) {
 		return {
 			restrict: 'E',
 			replace: false,
 			transclude: true,
 			scope: {
-				page: '@'
+				page: '='
 			},
 			
 			link: function(scope, element, attrs) {
+				var TRANSITION_END = "webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd";
+
 				var screenItems = [];				
 
 				var Screen = Class.extend({
@@ -1480,14 +1523,14 @@ limitations under the License.
 
 						if (scope.page) {
 							scope.presentPage(scope.page);
-						}
+						}						
 
 						attrs.$observe('page', function(page) {
 							if (page) {
 								this.resetToPage(page);
 							}
 						}.bind(this));
-					},
+					},					
 
 					onTransitionEnded: function() {
 						this.isReady = true;
@@ -1501,15 +1544,14 @@ limitations under the License.
 					animateInCurrentPage: function(pager) {
 						pager.attr("class", "screen-page unmodal");
 						var that = this;
-						pager.bind('webkitTransitionEnd', function transitionEnded() {
-							that.onTransitionEnded();
-							// pager.unbind(transitionEnded);
+						pager.bind(TRANSITION_END, function transitionEnded() {
+							that.onTransitionEnded();							
 						});
 						element[0].offsetWidth;
 						setTimeout(function() {
 							pager.attr("class", "screen-page transition screen_center");
 							this.animateInBehindPage();
-						}.bind(this), 0);
+						}.bind(this), 1000);
 
 					},
 
@@ -1523,13 +1565,12 @@ limitations under the License.
 					},
 
 					onPageAdded: function(page){
-						var blackMask = angular.element(page[0].querySelector('.onsen_screen-black-mask'));
-						blackMask.removeClass('hide');
+						// var blackMask = angular.element(page[0].querySelector('.onsen_screen-black-mask'));
+						// blackMask.removeClass('hide');
 					},
 
 					presentPage: function(page){
 						if (!this.isReady) {
-							console.log('not ready -> ignore');
 							return;
 						} else {
 							this.isReady = false;
@@ -1547,9 +1588,9 @@ limitations under the License.
 							var pageEl = angular.element('<div></div>');
 							pageEl.addClass('screen-page');
 
-							var blackMask = angular.element('<div></div>');
-							blackMask.addClass('onsen_screen-black-mask hide');
-							pageEl.append(blackMask);
+							// var blackMask = angular.element('<div></div>');
+							// blackMask.addClass('onsen_screen-black-mask hide');
+							// pageEl.append(blackMask);
 
 							var pageContainer = angular.element('<div></div>');
 							pageContainer.addClass('screen-page__container');
@@ -1557,7 +1598,8 @@ limitations under the License.
 
 							var templateHTML = angular.element(data.trim());
 							pageContainer.append(templateHTML);
-							var compiledPage = $compile(pageEl)(scope.$parent);
+							var pageScope = scope.$parent.$new();
+							var compiledPage = $compile(pageEl)(pageScope);
 							element.append(compiledPage);
 
 							if (!this.isEmpty()) {
@@ -1568,13 +1610,14 @@ limitations under the License.
 
 							var screenItem = {
 								pageUrl: page,
-								pageElement: compiledPage
+								pageElement: compiledPage,
+								pageScope: pageScope
 							}								
 
 							screenItems.push(screenItem);
 							setTimeout(function(){
 								this.onPageAdded(compiledPage);
-							}.bind(this), 200);
+							}.bind(this), 400);
 						}.bind(this)).error(function(data, status, headers, config) {
 							console.log('error', data, status);
 						});
@@ -1592,13 +1635,10 @@ limitations under the License.
 						this.animateOutBehindPage();
 						currentPage.attr("class", "screen-page transition unmodal");
 						var that = this;
-						currentPage.bind('webkitTransitionEnd', function transitionEnded() {
+						currentPage.bind(TRANSITION_END, function transitionEnded() {
 							currentPage.remove();
 							that.isReady = true;
-							scope.$apply(function(){
-								attrs.page = screenItems[screenItems.length - 1].pageUrl;
-								console.log('page is now ', attrs.page);
-							});
+							screenItem.pageScope.$destroy();
 						});
 					},
 
@@ -1619,7 +1659,10 @@ limitations under the License.
 				});
 
 				var screen = new Screen();
-				ScreenFactory.addScreen(scope);
+				ScreenStack.addScreen(scope);
+				scope.$on('$destroy', function(){
+					ScreenStack.removeScreen(scope);
+				});
 			}
 		}
 	});
@@ -1627,8 +1670,8 @@ limitations under the License.
 (function() {
 	var directiveModules = angular.module('onsen.directives');
 
-	directiveModules.factory('ScreenFactory', function($rootScope) {
-		var ScreenFactory = Class.extend({
+	directiveModules.factory('ScreenStack', function($rootScope) {
+		var ScreenStack = Class.extend({
 			screens: [],
 
 			init: function() {
@@ -1662,6 +1705,14 @@ limitations under the License.
 				this.screens.push(screen);
 			},
 
+			removeScreen: function(screen){
+				for (var i = 0; i < this.screens.length; i++) {
+					if(this.screens[i] == screen){
+						this.screens.splice(i, 1);
+					}
+				};
+			},
+
 			presentPage: function(page, $event) {
 				this._checkExistence();
 
@@ -1684,7 +1735,7 @@ limitations under the License.
 			}
 		});
 
-		return new ScreenFactory();
+		return new ScreenStack();
 	});
 })();
 /*
@@ -1809,7 +1860,15 @@ limitations under the License.
 				onScrolled: '&',
 				infinitScrollEnable: '='
 			},
-			templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/scroller.tpl'			
+			templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/scroller.tpl',
+			compile: function(elem, attrs, transcludeFn) {
+				return function(scope, element, attrs) {
+					var scroller = angular.element(element[0].querySelector('.scroller'));
+					transcludeFn(scope.$parent, function(clone) {
+						scroller.append(clone);
+					});
+				};
+			}
 		};
 	});
 })();
@@ -1903,7 +1962,7 @@ limitations under the License.
 	'use strict';
 	var directives = angular.module('onsen.directives'); // no [] -> referencing existing module
 
-	directives.directive('onsSlidingMenu', function(ONSEN_CONSTANTS, $http, $compile, SlidingMenuFactory) {
+	directives.directive('onsSlidingMenu', function(ONSEN_CONSTANTS, $http, $compile, SlidingMenuStack) {
 		return {
 			restrict: 'E',
 			replace: false,
@@ -1918,6 +1977,14 @@ limitations under the License.
 			templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/sliding_menu.tpl',
 			link: function(scope, element, attrs) {
 				var MAIN_PAGE_RATIO = 0.9;
+				var TRANSITION_END = "webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd";
+				var BROWSER_TRANSFORMS = [
+					"webkitTransform",
+					"mozTransform",
+					"msTransform",
+					"oTransform",
+					"transform"
+				];
 
 				var Swiper = Class.extend({
 					init: function(element) {
@@ -1976,7 +2043,7 @@ limitations under the License.
 
 					onSwipeTargetWidthChanged: function(targetWidth){
 						var width = parseInt(targetWidth);
-						if(width < 0){
+						if(width < 0 || !targetWidth){
 							this.swipeTargetWidth = this.abovePage.clientWidth;
 						}else{
 							this.swipeTargetWidth = width;
@@ -2007,7 +2074,7 @@ limitations under the License.
 
 					bindEvents: function() {
 						this.hammertime = new Hammer(this.el);						
-						this.$abovePage.bind('webkitTransitionEnd', this.onTransitionEnd.bind(this));
+						this.$abovePage.bind(TRANSITION_END, this.onTransitionEnd.bind(this));
 					},
 
 					attachMethods: function() {
@@ -2022,9 +2089,18 @@ limitations under the License.
 									var templateHTML = angular.element(data.trim());
 									var page = angular.element('<div></div>');
 									page.addClass('page');
-									var pageContent = $compile(templateHTML)(scope.$parent);
+									var pageScope = scope.$parent.$new();
+									var pageContent = $compile(templateHTML)(pageScope);
 									page.append(pageContent);
 									this.$behindPage.append(page);
+
+									if(this.currentBehindPageScope){
+										this.currentBehindPageScope.$destroy();
+										this.currentBehindPageElement.remove();
+									}
+
+									this.currentBehindPageElement = page;
+									this.currentBehindPageScope = pageScope;
 
 								}.bind(this));
 							} else {
@@ -2049,7 +2125,8 @@ limitations under the License.
 									var pageElement = angular.element('<div></div>');
 									pageElement.addClass('page');
 									pageElement[0].style.opacity = 0;
-									var pageContent = $compile(templateHTML)(scope.$parent);
+									var pageScope = scope.$parent.$new();
+									var pageContent = $compile(templateHTML)(pageScope);
 									pageElement.append(pageContent);
 									this.$abovePage.append(pageElement);
 
@@ -2058,8 +2135,10 @@ limitations under the License.
 										pageElement[0].style.opacity = 1;
 										if (this.currentPageElement) {
 											this.currentPageElement.remove();
+											this.currentPageScope.$destroy();
 										}
 										this.currentPageElement = pageElement;
+										this.currentPageScope = pageScope;
 									}.bind(this), 0);
 
 									this.currentPageUrl = pageUrl;
@@ -2075,9 +2154,12 @@ limitations under the License.
 						switch (ev.type) {
 
 							case 'touch':
-								if(ev.gesture.center.pageX > this.swipeTargetWidth){
-									ev.gesture.stopDetect();
+								if(this.isClosed()){
+									if(!this.isInsideSwipeTargetArea(ev.gesture.center.pageX)){
+										ev.gesture.stopDetect();
+									}	
 								}
+								
 								break;
 
 							case 'dragleft':
@@ -2110,9 +2192,17 @@ limitations under the License.
 						}
 					},
 
+					isInsideSwipeTargetArea: function(x){
+						return x < this.swipeTargetWidth;
+					},
+
 					onTransitionEnd: function() {
 						this.$abovePage.removeClass('transition');
 						this.$behindPage.removeClass('transition');
+					},
+
+					isClosed: function(){
+						return this.startX == 0;
 					},
 
 					close: function() {
@@ -2142,10 +2232,19 @@ limitations under the License.
 					},
 
 					translate: function(x) {
-						this.abovePage.style.webkitTransform = 'translate3d(' + x + 'px, 0, 0)';
+						var aboveTransform = 'translate3d(' + x + 'px, 0, 0)';
+						
 						var behind = (x - this.MAX) / this.MAX * 10;
 						var opacity = 1 + behind / 100;
-						this.behindPage.style.webkitTransform = 'translate3d(' + behind + '%, 0, 0)';
+						var behindTransform = 'translate3d(' + behind + '%, 0, 0)';
+
+						var property;
+						for (var i = 0; i < BROWSER_TRANSFORMS.length; i++) {
+							property = BROWSER_TRANSFORMS[i];
+							this.abovePage.style[property] = aboveTransform;
+							this.behindPage.style[property] = behindTransform;
+						};
+						
 						this.behindPage.style.opacity = opacity;
 						this.currentX = x;
 					}
@@ -2167,7 +2266,10 @@ limitations under the License.
 				};
 
 
-				SlidingMenuFactory.addSlidingMenu(scope);
+				SlidingMenuStack.addSlidingMenu(scope);
+				scope.$on('$destroy', function(){
+					SlidingMenuStack.removeSlidingMenu(scope);
+				});
 			}
 		};
 	});
@@ -2175,8 +2277,8 @@ limitations under the License.
 (function() {
 	var directiveModules = angular.module('onsen.directives');
 
-	directiveModules.factory('SlidingMenuFactory', function($rootScope) {
-		var SlidingMenuFactory = Class.extend({
+	directiveModules.factory('SlidingMenuStack', function($rootScope) {
+		var SlidingMenuStack = Class.extend({
 			slidingMenus: [],
 
 			init: function() {
@@ -2184,7 +2286,9 @@ limitations under the License.
 				$rootScope.ons.slidingMenu = {};
 				$rootScope.ons.slidingMenu.setAbovePage = this.setAbovePage.bind(this);
 				$rootScope.ons.slidingMenu.setBehindPage = this.setBehindPage.bind(this);
-				$rootScope.ons.slidingMenu.toggleMenu = this.toggleMenu.bind(this);				
+				$rootScope.ons.slidingMenu.toggleMenu = this.toggleMenu.bind(this);
+				$rootScope.ons.slidingMenu.openMenu = this.openMenu.bind(this);
+				$rootScope.ons.slidingMenu.closeMenu = this.closeMenu.bind(this);
 			},
 
 			_findClosestSlidingMenu: function($event) {				
@@ -2209,6 +2313,14 @@ limitations under the License.
 				this.slidingMenus.push(slidingMenu);
 			},
 
+			removeSlidingMenu: function(slidingMenu){
+				for (var i = 0; i < this.slidingMenus.length; i++) {
+					if(this.slidingMenus[i] == slidingMenu){
+						this.slidingMenus.splice(i, 1);
+					}
+				};
+			},
+
 			setAbovePage: function(page, $event) {
 				this._checkExistence();
 
@@ -2228,10 +2340,24 @@ limitations under the License.
 
 				var slidingMenu = this._findClosestSlidingMenu($event);
 				slidingMenu.toggleMenu();
+			},
+
+			openMenu: function($event) {
+				this._checkExistence();
+
+				var slidingMenu = this._findClosestSlidingMenu($event);
+				slidingMenu.openMenu();
+			},
+
+			closeMenu: function($event) {
+				this._checkExistence();
+
+				var slidingMenu = this._findClosestSlidingMenu($event);
+				slidingMenu.closeMenu();
 			}
 		});
 
-		return new SlidingMenuFactory();
+		return new SlidingMenuStack();
 	});
 })();
 /*
@@ -2256,7 +2382,7 @@ limitations under the License.
 	'use strict';
 	var directives = angular.module('onsen.directives'); // no [] -> referencing existing module
 
-	directives.directive('onsSplitView', function(ONSEN_CONSTANTS, $http, $compile, SplitViewFactory) {
+	directives.directive('onsSplitView', function(ONSEN_CONSTANTS, $http, $compile, SplitViewStack) {
 		return {
 			restrict: 'E',
 			replace: false,
@@ -2272,6 +2398,15 @@ limitations under the License.
 				var SPLIT_MODE = 0;
 				var COLLAPSE_MODE = 1;
 				var MAIN_PAGE_RATIO = 0.9;			
+
+				var TRANSITION_END = "webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd";
+				var BROWSER_TRANSFORMS = [
+					"webkitTransform",
+					"mozTransform",
+					"msTransform",
+					"oTransform",
+					"transform"
+				];
 
 				var Swiper = Class.extend({
 					init: function(element) {
@@ -2322,10 +2457,20 @@ limitations under the License.
 								}).success(function(data, status, headers, config) {
 									var templateHTML = angular.element(data.trim());
 									var page = angular.element('<div></div>');
-									page.addClass('page');									
-									var pageContent = $compile(templateHTML)(scope.$parent);
+									page.addClass('page');		
+									var pageScope = scope.$parent.$new();
+									var pageContent = $compile(templateHTML)(pageScope);
 									page.append(pageContent);
-									this.$behindPage.append(page);									
+									this.$behindPage.append(page);	
+
+
+									if(this.currentBehindPageElement){
+										this.currentBehindPageElement.remove();
+										this.currentBehindPageScope.$destroy();
+									}
+
+									this.currentBehindPageElement = page;
+									this.currentBehindPageScope = pageScope;
 
 								}.bind(this));
 							} else {
@@ -2345,7 +2490,8 @@ limitations under the License.
 									var page = angular.element('<div></div>');
 									page.addClass('page');
 									page[0].style.opacity = 0;
-									var pageContent = $compile(templateHTML)(scope.$parent);
+									var pageScope = scope.$parent.$new();
+									var pageContent = $compile(templateHTML)(pageScope);
 									page.append(pageContent);
 									this.$abovePage.append(page);
 
@@ -2354,8 +2500,10 @@ limitations under the License.
 										page[0].style.opacity = 1;
 										if(this.currentPage){
 											this.currentPage.remove();
+											this.currentPageScope.$destroy();
 										}
 										this.currentPage = page;
+										this.currentPageScope = pageScope;
 									}.bind(this), 0);
 
 								}.bind(this));
@@ -2448,7 +2596,7 @@ limitations under the License.
 						this.behindPage.style.opacity = 1;
 						this.abovePage.style.width = scope.mainPageWidth + '%';
 						var translate = this.behindPage.clientWidth;
-						this.translate2(translate);
+						this.translate(translate);
 					},
 
 					activateCollapseMode: function() {
@@ -2481,7 +2629,7 @@ limitations under the License.
 					},
 
 					bindEvents: function() {
-						this.$abovePage.bind('webkitTransitionEnd', this.onTransitionEnd.bind(this));
+						this.$abovePage.bind(TRANSITION_END, this.onTransitionEnd.bind(this));
 					},
 
 					handleEvent: function(ev) {
@@ -2555,17 +2703,20 @@ limitations under the License.
 					},
 
 					translate: function(x) {
-						this.abovePage.style.webkitTransform = 'translate3d(' + x + 'px, 0, 0)';
+						var aboveTransform = 'translate3d(' + x + 'px, 0, 0)';
+						
 						var behind = (x - this.MAX) / this.MAX * 10;
 						var opacity = 1 + behind / 100;
-						this.behindPage.style.webkitTransform = 'translate3d(' + behind + '%, 0, 0)';
-						this.behindPage.style.opacity = opacity;
-						this.currentX = x;
-					},
+						var behindTransform = 'translate3d(' + behind + '%, 0, 0)';
 
-					translate2: function(x) {
-						this.behindPage.style.webkitTransform = 'translate3d(0, 0, 0)';
-						this.abovePage.style.webkitTransform = 'translate3d(' + x + 'px, 0, 0)';
+						var property;
+						for (var i = 0; i < BROWSER_TRANSFORMS.length; i++) {
+							property = BROWSER_TRANSFORMS[i];
+							this.abovePage.style[property] = aboveTransform;
+							this.behindPage.style[property] = behindTransform;
+						};
+						
+						this.behindPage.style.opacity = opacity;
 						this.currentX = x;
 					}
 				});
@@ -2600,7 +2751,10 @@ limitations under the License.
 					}
 				};	
 
-				SplitViewFactory.addSplitView(scope);			
+				SplitViewStack.addSplitView(scope);		
+				scope.$on('$destroy', function(){
+					SplitViewStack.removeSplitView(scope);
+				});	
 			}
 		};
 	});
@@ -2608,8 +2762,8 @@ limitations under the License.
 (function() {
 	var directiveModules = angular.module('onsen.directives');
 
-	directiveModules.factory('SplitViewFactory', function($rootScope) {
-		var SplitViewFactory = Class.extend({
+	directiveModules.factory('SplitViewStack', function($rootScope) {
+		var SplitViewStack = Class.extend({
 			splitViews: [],
 
 			init: function() {
@@ -2643,6 +2797,14 @@ limitations under the License.
 				this.splitViews.push(splitView);
 			},
 
+			removeSplitView: function(splitView){
+				for (var i = 0; i < this.splitViews.length; i++) {
+					if(this.splitViews[i] == splitView){
+						this.splitViews.splice(i, 1);
+					}
+				};
+			},
+
 			setMainPage: function(page, $event) {
 				this._checkExistence();
 
@@ -2665,7 +2827,7 @@ limitations under the License.
 			}
 		});
 
-		return new SplitViewFactory();
+		return new SplitViewStack();
 	});
 })();
 /*
@@ -2690,48 +2852,88 @@ limitations under the License.
 	'use strict';
 	var directives = angular.module('onsen.directives'); // no [] -> referencing existing module
 
-	directives.directive('onsTabbar', function(ONSEN_CONSTANTS, $timeout) {
+	directives.directive('onsTabbar', function(ONSEN_CONSTANTS, $timeout, $http, $compile) {
 		return {
 			restrict: 'E',
 			replace: false,
-			transclude: true,			
+			transclude: true,
+			scope: {
+				hide: '@'
+			},
 			templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/tab_bar.tpl',
 			controller: function($scope, $element, $attrs) {
+				var container = angular.element($element[0].querySelector('.tab-bar-content'));
 				var footer = $element[0].querySelector('.footer');
+
+				this.tabbarId = Date.now();
 
 				$scope.selectedTabItem = {
 					source: ''
 				};
 
-				$attrs.$observe('hideTabs', function(hide){
-					$scope.hideTabs = hide;					
+				$attrs.$observe('hideTabs', function(hide) {
+					$scope.hideTabs = hide;
 					onTabbarVisibilityChanged();
 				});
 
-				function onTabbarVisibilityChanged(){
-					if($scope.hideTabs){
+				function onTabbarVisibilityChanged() {
+					if ($scope.hideTabs) {
 						$scope.tabbarHeight = 0;
-					}else{					
+					} else {
 						$scope.tabbarHeight = footer.clientHeight + 'px';
 					}
 				}
-			
+
 				var tabItems = [];
 
-				this.gotSelected = function(selectedTabItem) {					
-					$scope.selectedTabItem.source = selectedTabItem.page;					
+				this.gotSelected = function(selectedTabItem) {
+					if (selectedTabItem.page) {
+						setPage(selectedTabItem.page);
+					}
+
+					for (var i = 0; i < tabItems.length; i++) {
+						if (tabItems[i] != selectedTabItem) {
+							tabItems[i].setInactive();
+						}
+					}
+				};
+
+				function setPage(page) {
+					if (page) {
+						$http({
+							url: page,
+							method: "GET"
+						}).error(function(e) {
+							console.error(e);
+						}).success(function(data, status, headers, config) {
+							var templateHTML = angular.element(data.trim());
+							var pageScope = $scope.$parent.$new();
+							var pageContent = $compile(templateHTML)(pageScope);
+							container.append(pageContent);
+
+							if(this.currentPageElement){
+								this.currentPageElement.remove();
+								this.currentPageScope.$destroy();
+							}
+
+							this.currentPageElement = pageContent;
+							this.currentPageScope = pageScope;
+						}.bind(this));
+					} else {
+						throw new Error('cannot set undefined page');
+					}
 				}
 
-				this.addTabItem = function(tabItem) {					
+				this.addTabItem = function(tabItem) {
 					tabItems.push(tabItem);
-				}
+				};
 
 				$scope.ons = $scope.ons || {};
 				$scope.ons.tabbar = {};
-				$scope.ons.tabbar.setTabbarVisibility = function(visible){
+				$scope.ons.tabbar.setTabbarVisibility = function(visible) {
 					$scope.hideTabs = !visible;
 					onTabbarVisibilityChanged();
-				}
+				};
 			}
 		};
 	});
@@ -2763,25 +2965,36 @@ limitations under the License.
 			restrict: 'E',
 			replace: true,
 			transclude: true,
-			require: '^?onsTabbar',
+			require: '^onsTabbar',
 			scope: {
 				page: '@',
 				active: '@',
 				icon: '@',
+				activeIcon: '@',
 				label: '@'
 			},
 			templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/tab_bar_item.tpl',
-			link: function(scope, element, attrs, monacaTabbarController) {
+			link: function(scope, element, attrs, tabbarController) {
 				var radioButton = element[0].querySelector('input');
 
-				monacaTabbarController.addTabItem(scope);
+				scope.tabbarId = tabbarController.tabbarId;
 
-				scope.setActive = function() {					
+				tabbarController.addTabItem(scope);
+				scope.tabIcon = scope.icon;
+
+				scope.setActive = function() {
 					radioButton.checked = true;
-					monacaTabbarController.gotSelected(scope);
+					tabbarController.gotSelected(scope);
+					if (scope.activeIcon) {
+						scope.tabIcon = scope.activeIcon;
+					}
 				};
 
-				if (scope.active) {					
+				scope.setInactive = function() {
+					scope.tabIcon = scope.icon;
+				};
+
+				if (scope.active) {
 					scope.setActive();
 				}
 
