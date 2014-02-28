@@ -16,8 +16,7 @@ limitations under the License.
 */
 
 .onsen-slide-animation.ng-animate {
-  transition-duration: 400ms;
-  transition-delay: 10ms;
+  transition-duration: 400ms;  
   animation-timing-function: cubic-bezier(.1, .7, .1, 1);
 }
 
@@ -37,19 +36,28 @@ limitations under the License.
   transform: translate3d(100%, 0, 0);
 }
 
+/**** Partial Fade ****/
 
+.onsen-partial-fade-animation {
+  transition-duration: 400ms;  
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);  
+}
 
-/*.onsen-slide-animation.ng-leave .navigator-page {
-  transition-duration: 400ms;
-  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+.onsen-partial-fade-animation-add {
+  opacity: 1;
+}
+
+.onsen-partial-fade-animation-add-active {
   opacity: 0.9;
 }
 
-.onsen-slide-animation.ng-leave-active .navigator-page {  
-  transition-duration: 400ms;
-  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+.onsen-partial-fade-animation-remove {
+  opacity: 0.9;
+}
+
+.onsen-partial-fade-animation-remove-active {
   opacity: 1;
-}*/
+}
 
 /*.onsen-partial-fade-animation {
   animation: onsen-partial-fade-add 400ms cubic-bezier(.1, .7, .1, 1);
@@ -81,31 +89,29 @@ limitations under the License.
   }
 }*/
 
-.onsen-slide-partial-animation-add {
-  animation: onsen-slide-partial-add 400ms cubic-bezier(.1, .7, .1, 1);
+/**** Slide Partial ****/
+
+.onsen-slide-partial-animation {
+  transition-duration: 400ms;  
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);  
 }
 
-@keyframes onsen-slide-partial-add {
-  0% {
-     transform: translate3d(0, 0, 0);
-  }  
-  100% {
-    transform: translate3d(-25%, 0, 0);
-  }
+.onsen-slide-partial-animation-add {
+  transform: translate3d(0, 0, 0);
+}
+
+.onsen-slide-partial-animation-add-active {
+  transform: translate3d(-25%, 0, 0);
 }
 
 .onsen-slide-partial-animation-remove {
-  animation: onsen-slide-partial-remove 400ms cubic-bezier(.1, .7, .1, 1);
+  transform: translate3d(-25%, 0, 0);
 }
 
-@keyframes onsen-slide-partial-remove {
-  0% {
-     transform: translate3d(-25%, 0, 0);
-  }  
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
+.onsen-slide-partial-animation-remove-active {
+  transform: translate3d(0, 0, 0);
 }
+
 
 /*.onsen-slide-partial-animation .navigator-page {
   transition-duration: 400ms;

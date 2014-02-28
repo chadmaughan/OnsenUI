@@ -356,17 +356,20 @@ limitations under the License.
 					animatePageIn: function(parent, inPage, outPage) {
 						var that = this;
 
-						// var navigatorPage = angular.element(outPage[0].querySelector('.navigator-page'));
-						// $animate.addClass(navigatorPage, 'onsen-partial-fade-animation');
-
 						$animate.enter(inPage, parent, outPage, function() {							
 							that.onTransitionEnded();
 						});
 
-						// $animate.addClass(outPage, 'onsen-slide-partial-animation');																		
+						var navigatorPage = angular.element(outPage[0].querySelector('.navigator-page'));
+						$animate.addClass(navigatorPage, 'onsen-partial-fade-animation');
+
+						$animate.addClass(outPage, 'onsen-slide-partial-animation');																		
 					},
 
 					animatePageOut: function(currentPage, previousPage) {						
+						var navigatorPage = angular.element(previousPage[0].querySelector('.navigator-page'));
+						$animate.removeClass(navigatorPage, 'onsen-partial-fade-animation');
+						
 						$animate.leave(currentPage, function(){
 							console.log('leave done');
 							var currentPageScope = currentPage.scope();
@@ -375,10 +378,7 @@ limitations under the License.
 							}
 
 							this.onTransitionEnded();
-						}.bind(this));
-
-						var navigatorPage = angular.element(previousPage[0].querySelector('.navigator-page'));
-						$animate.removeClass(navigatorPage, 'onsen-partial-fade-animation');
+						}.bind(this));						
 
 						$animate.removeClass(previousPage, 'onsen-slide-partial-animation');
 																		
@@ -489,7 +489,7 @@ limitations under the License.
 										this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
 									}.bind(this));
 									
-								}.bind(this), 100);
+								}.bind(this), 0);
 
 							} else {
 								// root page
