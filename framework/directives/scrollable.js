@@ -35,8 +35,6 @@ limitations under the License.
 					return;
 				}
 
-				
-
 				scrollWrapper = element[0];
 				var offset = parseInt(attrs.threshold) || 10;
 
@@ -52,39 +50,47 @@ limitations under the License.
 						}
 					});	
 				}
+
+				var scrollContent = scrollWrapper.querySelector('.scroller');
+
+				new EasyScroller(scrollContent, {
+					scrollingX: false,
+					scrollingY: true,
+					zooming: true					
+				});
 				
 
 				// IScroll for Android
-				if (!Modernizr.csstransforms3d) {
-					$timeout(function() {
-						var iScroll = new IScroll(scrollWrapper, {
-							momentum: true,
-							bounce: true,
-							hScrollbar: false,
-							vScrollbar: false,
-							preventDefault: false
-						});
+				// if (!Modernizr.csstransforms3d) {
+				// 	$timeout(function() {
+				// 		var iScroll = new IScroll(scrollWrapper, {
+				// 			momentum: true,
+				// 			bounce: true,
+				// 			hScrollbar: false,
+				// 			vScrollbar: false,
+				// 			preventDefault: false
+				// 		});
 
-						iScroll.on('scrollStart', function(e) {
-							var scrolled = iScroll.y - offset;							
-							if (scrolled < (iScroll.maxScrollY + 40) ) {
-								// TODO: find a better way to know when content is upated so we can refresh
-								iScroll.refresh();
-							}
-						});
+				// 		iScroll.on('scrollStart', function(e) {
+				// 			var scrolled = iScroll.y - offset;							
+				// 			if (scrolled < (iScroll.maxScrollY + 40) ) {
+				// 				// TODO: find a better way to know when content is upated so we can refresh
+				// 				iScroll.refresh();
+				// 			}
+				// 		});
 
-						if(scope.onScrolled){
-							iScroll.on('scrollEnd', function(e) {
-								var scrolled = iScroll.y - offset;
-								if (scrolled < iScroll.maxScrollY) {
-									// console.log('we are there!');
-									scope.onScrolled();
-								}
-							});	
-						}
+				// 		if(scope.onScrolled){
+				// 			iScroll.on('scrollEnd', function(e) {
+				// 				var scrolled = iScroll.y - offset;
+				// 				if (scrolled < iScroll.maxScrollY) {
+				// 					// console.log('we are there!');
+				// 					scope.onScrolled();
+				// 				}
+				// 			});	
+				// 		}
 						
-					}, 500);
-				}
+				// 	}, 500);
+				// }
 			}
 		};
 	});
