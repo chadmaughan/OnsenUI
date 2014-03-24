@@ -44,6 +44,9 @@ module.exports = function(grunt) {
           'framework/directives/module.js',
           'framework/directives/*.js',
           'framework/lib/*.js',
+          'framework/lib/scroller/Animate.js',
+          'framework/lib/scroller/Scroller.js',          
+          'framework/lib/scroller/EasyScroller.js',
           'framework/js/*.js'
         ],
         dest: 'build/js/<%= pkg.name %>.js'
@@ -57,6 +60,9 @@ module.exports = function(grunt) {
           'framework/directives/module.js',
           'framework/directives/*.js',
           'framework/lib/*.js',
+          'framework/lib/scroller/Animate.js',
+          'framework/lib/scroller/Scroller.js',          
+          'framework/lib/scroller/EasyScroller.js',
           'framework/js/*.js'
         ],
         dest: 'build/js/<%= pkg.name %>_all.js'
