@@ -1223,6 +1223,9 @@ input[type="checkbox"] {
   white-space: nowrap;
   overflow: hidden;
 }
+.topcoat-navigation-bar * {
+  line-height: 44px;
+}
 .topcoat-navigation-bar {
   height: 44px;
   padding-left: 0;
