@@ -134,7 +134,7 @@ gulp.task('prepare', ['html2js'], function() {
 ////////////////////////////////////////
 // prepare-project-templates
 ////////////////////////////////////////
-gulp.task('prepare-project-templates', function() {
+gulp.task('prepare-project-templates', ['prepare'], function() {
     // projects template
     return gulp.src(['build/**', '!build/plugin_info.json'])
         .pipe(gulp.dest('app/lib/onsen'))
@@ -198,8 +198,7 @@ gulp.task('build', function() {
     return runSequence(
         'clean',
         'build-theme',
-        'build-topdoc',
-        'prepare',
+        'build-topdoc',        
         'prepare-project-templates',
         'compress-project-templates'
     );
@@ -216,17 +215,19 @@ gulp.task('default', function() {
 // serve
 ////////////////////////////////////////
 gulp.task('serve', ['prepare', 'connect'], function() {
-    gulp.watch(['framework/templates/*.tpl'], ['html2js']);
-
-    gulp.watch([
+    
+    gulp.watch([        
         'framework/*/*',
+        '!framework/directives/templates.js',
         'demo/*/*',
         'demo/*',
+        '!demo/lib/*',
         'app/*/*',
         'app/*',
+        '!app/lib/*',
         'test/manual-testcases/*',
-        'test/manual-testcases/*/*'
-    ], ['prepare']).on('change', function(changedFile) {
+        'test/manual-testcases/*/*',
+    ], ['prepare-project-templates']).on('change', function(changedFile) {        
         gulp.src(changedFile.path).pipe(connect.reload());
     });
 
