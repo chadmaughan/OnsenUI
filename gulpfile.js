@@ -71,12 +71,12 @@ gulp.task('prepare', ['html2js'], function() {
 
         // onsenui.js
         gulp.src([
+            'framework/lib/*.js',
             'framework/directives/templates.js',
             'framework/directives/module.js',
             'framework/directives/*.js',
             'framework/services/module.js',
-            'framework/services/*.js',
-            'framework/lib/*.js',
+            'framework/services/*.js',            
             'framework/js/*.js'
         ])            
             .pipe(concat('onsenui.js'))            
@@ -222,6 +222,8 @@ gulp.task('serve', ['prepare', 'connect'], function() {
         'framework/*/*',
         'demo/*/*',
         'demo/*',
+        'app/*/*',
+        'app/*',
         'test/manual-testcases/*',
         'test/manual-testcases/*/*'
     ], ['prepare']).on('change', function(changedFile) {
