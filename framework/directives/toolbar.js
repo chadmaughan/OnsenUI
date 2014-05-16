@@ -11,6 +11,38 @@
       this.scope = scope;
       this.element = element;
       this.attrs = attrs;
+    },
+
+    showBackButton: function(){
+
+    },
+
+    hideBackButton: function(){
+
+    },
+
+    pushLeftContent: function(leftContent){
+
+    },
+
+    pushCenterContent: function(centerContent){
+
+    },
+
+    pushRightContent: function(rightContent){
+
+    },
+
+    popLeftContent: function(){
+
+    },
+
+    popCenterContent: function(){
+
+    },
+
+    popRightContent: function(){
+
     }
   });
 

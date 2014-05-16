@@ -122,17 +122,19 @@ app.run(["$templateCache", function($templateCache) {
   "use strict";
   $templateCache.put("templates/navigator.tpl",
     "<div class=\"ons-navigator\">\n" +
-    "  <div ng-hide=\"hideToolbar\" class=\"topcoat-navigation-bar ons-navigator__toolbar {{modifierTemplater('topcoat-navigation-bar--*')}}\">\n" +
-    "    <div class=\"ons-navigator__toolbar-content {{modifierTemplater('topcoat-navigation-bar--*__content')}}\">\n" +
-    "      <div class=\"ons-navigator__item topcoat-navigation-bar__bg ons-navigator__left-button-container ons-navigator__left-button-container--transition ons-navigator__left-button-container--hidden {{modifierTemplater('topcoat-navigation-bar--*__bg')}}\">\n" +
-    "        <span class=\"topcoat-icon-button--quiet ons-navigator__left-section\">\n" +
-    "          <i class=\"fa fa-angle-left fa-2x topcoat-navigation-bar__line-height {{modifierTemplater('topcoat-navigation-bar--*__line-height')}}\"></i>\n" +
+    "  <div class=\"topcoat-navigation-bar flex-container\">\n" +
+    "    <div class=\"flex-item left\">\n" +
+    "      <span class=\"back-button-box\">\n" +
+    "        <span class=\"topcoat-icon-button--quiet\">\n" +
+    "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
     "        </span>\n" +
-    "      </div>\n" +
-    "      <div class=\"ons-navigator__right-button ons-navigator__item\">\n" +
-    "        <span class=\"topcoat-icon-button--quiet ons-navigator__right-section-icon\">\n" +
-    "        </span>\n" +
-    "      </div>\n" +
+    "      </span>      \n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item title\">\n" +
+    "      Title\n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item right\">\n" +
+    "      Right\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
@@ -311,5 +313,28 @@ app.run(["$templateCache", function($templateCache) {
   "use strict";
   $templateCache.put("templates/text_input.tpl",
     "<input class=\"topcoat-text-input\">");
+}]);
+})();
+
+(function(module) {
+try { app = angular.module("templates-main"); }
+catch(err) { app = angular.module("templates-main", []); }
+app.run(["$templateCache", function($templateCache) {
+  "use strict";
+  $templateCache.put("templates/toolbar.tpl",
+    "<div class=\"topcoat-navigation-bar flex-container\">\n" +
+    "	<div class=\"flex-item left\">\n" +
+    "		<span class=\"topcoat-icon-button--quiet\">\n" +
+    "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
+    "        </span>\n" +
+    "	</div>\n" +
+    "	<div class=\"flex-item title\">\n" +
+    "		Title\n" +
+    "	</div>\n" +
+    "	<div class=\"flex-item right\">\n" +
+    "		Right\n" +
+    "	</div>\n" +
+    "</div>\n" +
+    "");
 }]);
 })();
