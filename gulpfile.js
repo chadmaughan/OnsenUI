@@ -70,10 +70,11 @@ gulp.task('prepare', ['html2js'], function() {
             .pipe(jshint.reporter('jshint-stylish')),
 
         // onsenui.js
-        gulp.src([
+        gulp.src([            
             'framework/lib/*.js',
             'framework/directives/templates.js',
             'framework/directives/module.js',
+            'framework/js/onsen.js',
             'framework/directives/*.js',
             'framework/services/module.js',
             'framework/services/*.js',            
@@ -84,10 +85,11 @@ gulp.task('prepare', ['html2js'], function() {
             .pipe(gulp.dest('build/js/')),
 
         // onsenui_all.js
-        gulp.src([
+        gulp.src([                        
             'framework/lib/angular/angular.js',
             'framework/directives/templates.js',
             'framework/directives/module.js',
+            'framework/js/onsen.js',
             'framework/directives/*.js',
             'framework/services/module.js',
             'framework/services/*.js',
