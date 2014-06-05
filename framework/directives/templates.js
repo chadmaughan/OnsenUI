@@ -130,8 +130,16 @@ app.run(["$templateCache", function($templateCache) {
     "        </span>\n" +
     "      </span>      \n" +
     "    </div>\n" +
-    "    <div class=\"flex-item title\">\n" +
-    "      Title\n" +
+    "    <div class=\"flex-item left ons-back-label\">\n" +
+    "\n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item ons-center-box center\">\n" +
+    "      <span>\n" +
+    "        Page 1\n" +
+    "      </span>\n" +
+    "      <span>\n" +
+    "        Title 2\n" +
+    "      </span>\n" +
     "    </div>\n" +
     "    <div class=\"flex-item right\">\n" +
     "      Right\n" +

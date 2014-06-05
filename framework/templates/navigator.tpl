@@ -7,8 +7,16 @@
         </span>
       </span>      
     </div>
-    <div class="flex-item title">
-      Title
+    <div class="flex-item left ons-back-label">
+
+    </div>
+    <div class="flex-item ons-center-box center">
+      <span>
+        Page 1
+      </span>
+      <span>
+        Title 2
+      </span>
     </div>
     <div class="flex-item right">
       Right

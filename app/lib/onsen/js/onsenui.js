@@ -1,4 +1,4 @@
-/*! onsenui - v1.0.4 - 2014-05-16 */
+/*! onsenui - v1.0.4 - 2014-06-05 */
 /* Simple JavaScript Inheritance
  * By John Resig http://ejohn.org/
  * MIT Licensed.
@@ -63,6 +63,83 @@
     return Class;
   };
 })();
+// The MIT License (MIT)
+// Copyright © 2014 Remy Sharp, http://remysharp.com
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+(function () {
+
+if (typeof window.Element === "undefined" || "classList" in document.documentElement) return;
+
+var prototype = Array.prototype,
+    push = prototype.push,
+    splice = prototype.splice,
+    join = prototype.join;
+
+function DOMTokenList(el) {
+  this.el = el;
+  // The className needs to be trimmed and split on whitespace
+  // to retrieve a list of classes.
+  var classes = el.className.replace(/^\s+|\s+$/g,'').split(/\s+/);
+  for (var i = 0; i < classes.length; i++) {
+    push.call(this, classes[i]);
+  }
+};
+
+DOMTokenList.prototype = {
+  add: function(token) {
+    if(this.contains(token)) return;
+    push.call(this, token);
+    this.el.className = this.toString();
+  },
+  contains: function(token) {
+    return this.el.className.indexOf(token) != -1;
+  },
+  item: function(index) {
+    return this[index] || null;
+  },
+  remove: function(token) {
+    if (!this.contains(token)) return;
+    for (var i = 0; i < this.length; i++) {
+      if (this[i] == token) break;
+    }
+    splice.call(this, i, 1);
+    this.el.className = this.toString();
+  },
+  toString: function() {
+    return join.call(this, ' ');
+  },
+  toggle: function(token) {
+    if (!this.contains(token)) {
+      this.add(token);
+    } else {
+      this.remove(token);
+    }
+
+    return this.contains(token);
+  }
+};
+
+window.DOMTokenList = DOMTokenList;
+
+function defineElementGetter (obj, prop, getter) {
+    if (Object.defineProperty) {
+        Object.defineProperty(obj, prop,{
+            get : getter
+        });
+    } else {
+        obj.__defineGetter__(prop, getter);
+    }
+}
+
+defineElementGetter(Element.prototype, 'classList', function () {
+  return new DOMTokenList(this);
+});
+
+})();
+
 /**
  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
  *
@@ -3810,12 +3887,22 @@ app.run(["$templateCache", function($templateCache) {
     "<div class=\"ons-navigator\">\n" +
     "  <div class=\"topcoat-navigation-bar flex-container\">\n" +
     "    <div class=\"flex-item left\">\n" +
-    "      <span class=\"topcoat-icon-button--quiet\">\n" +
-    "            <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
-    "          </span>\n" +
+    "      <span class=\"back-button-box\">\n" +
+    "        <span class=\"topcoat-icon-button--quiet\">\n" +
+    "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
+    "        </span>\n" +
+    "      </span>      \n" +
     "    </div>\n" +
-    "    <div class=\"flex-item title\">\n" +
-    "      Title\n" +
+    "    <div class=\"flex-item left ons-back-label\">\n" +
+    "\n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item ons-center-box center\">\n" +
+    "      <span>\n" +
+    "        Page 1\n" +
+    "      </span>\n" +
+    "      <span>\n" +
+    "        Title 2\n" +
+    "      </span>\n" +
     "    </div>\n" +
     "    <div class=\"flex-item right\">\n" +
     "      Right\n" +
@@ -4118,6 +4205,89 @@ limitations under the License.
       }
     };
   });
+})();
+
+/* jshint evil:true */
+
+(function(){
+  'use strict';
+
+  // for initialization hook.
+  if (document.readyState === 'loading' || document.readyState == 'uninitialized') {
+    document.write('<ons-dummy-for-init></ons-dummy-for-init>');
+  } else {
+    var dom = document.createElement('ons-dummy-for-init');
+    document.body.appendChild(dom);
+  }
+
+  angular.module('onsen.directives').run(function($compile, $rootScope) {
+    ons.$compile = $compile;
+    $rootScope.$on('$ons-ready', function() {
+      ons.isReady = function() {
+        return true;
+      };
+    });
+  });
+
+  // JS Global facade for Onsen UI.
+  var ons = window.ons = {
+    /**
+     * Bootstrap this document as a Onsen UI application.
+     *
+     * If you want use your AngularJS module, use "ng-app" directive and "angular.module()" manually.
+     */
+    bootstrap : function() {
+      var doc = window.document;
+      if (doc.readyState == 'loading' || doc.readyState == 'uninitialized') {
+        doc.addEventListener('DOMContentLoaded', function() {
+          angular.bootstrap(doc.documentElement, ['onsen']);
+        }, false);
+      } else if (doc.documentElement) {
+        angular.bootstrap(doc.documentElement, ['onsen']);
+      } else {
+        throw new Error('Invalid state');
+      }
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    isReady : function() {
+      return false;
+    },
+
+    /**
+     * @param {HTMLElement} dom
+     */
+    compile : function(dom) {
+      if (!ons.$compile) {
+        throw new Error('ons.$compile() is not ready. Wait for initialization.');
+      }
+
+      if (!(dom instanceof HTMLElement)) {
+        throw new Error('First argument must be an instance of HTMLElement.');
+      }
+      var scope = angular.element(dom).scope();
+      if (!scope) {
+        throw new Error('AngularJS Scope is null. Argument DOM element must be attached in DOM document.');
+      }
+      ons.$compile(dom)(scope);
+    },
+
+    /**
+     * @param {Function} callback
+     */
+    ready : function(callback) {
+      if (ons.isReady()) {
+        callback();
+      } else {
+        angular.module('onsen.directives').run(function($rootScope) {
+          $rootScope.$on('$ons-ready', callback);
+        });
+      }
+    }
+  };
+
 })();
 
 /*
@@ -4607,8 +4777,71 @@ limitations under the License.
   'use strict';
 
   var Toolbar = Class.extend({
+    leftButtons: [],
+    rightButtons: [],
+    title: [],
+    init: function(scope, element, attrs){
+      this.scope = scope;
+      this.element = element;
+      this.backButtonBox = this.element[0].querySelector('.back-button-box');
+      this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
+      this.attrs = attrs;
+    },
 
+    pushOptions: function(options){
+      console.log('push options');
+      if(options.title){
+        this.pushCenterContent(options.title);
+      }
+    },
+
+    showBackButton: function(){
+      
+    },
+
+    hideBackButton: function(){
+
+    },
+
+    pushLeftContent: function(leftContent){
+
+    },
+
+    setLeftContent: function(leftContent){
+
+    },
+
+    pushCenterContent: function(centerContent){
+      this.centerBox.append(centerContent);
+    },
+
+    setCenterContent: function(centerContent){
+
+    },
+
+    pushRightContent: function(rightContent){
+
+    },
+
+    setRightContent: function(rightContent){
+
+    },
+
+    popLeftContent: function(){
+
+    },
+
+    popCenterContent: function(){
+
+    },
+
+    popRightContent: function(){
+
+    }
   });
+
+  window.ons = window.ons || {};
+  window.ons.Toolbar = Toolbar;
 })();
 
 
@@ -4705,7 +4938,8 @@ limitations under the License.
         this.navigatorItems = [];
 
         this.container = angular.element(element[0].querySelector('.ons-navigator__content'));
-        this.toolbar = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbarEl = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs);
         this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));
         // this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
         // this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
@@ -5165,7 +5399,9 @@ limitations under the License.
 
           setTimeout(function() {
             this.animatePageIn(pager, previousPage);
-            this.animateTitleIn(navigatorItem, previousNavigatorItem);
+
+            this.toolbar.pushOptions(navigatorItem.options);
+            // this.animateTitleIn(navigatorItem, previousNavigatorItem);
 
             // this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
             // this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
@@ -5173,19 +5409,19 @@ limitations under the License.
 
         } else {
           // root page
-          var titleElement = angular.element('<div></div>');
+          // var titleElement = angular.element('<div></div>');
 
-          titleElement.addClass(
-            'ons-navigator__item ons-navigator__title ' +
-            'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
-            'center ons-navigator__title--animate-center ' + 
-            this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
-            this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-          );
+          // titleElement.addClass(
+          //   'ons-navigator__item ons-navigator__title ' +
+          //   'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
+          //   'center ons-navigator__title--animate-center ' + 
+          //   this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
+          //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+          // );
 
-          if (options.title) {
-            titleElement.text(options.title);
-          }
+          // if (options.title) {
+          //   titleElement.text(options.title);
+          // }
           // this.toolbarContent.append(titleElement);
           // navigatorItem.titleElement = titleElement;
           // this.animateRightButtonIn(navigatorItem, null);
@@ -7599,6 +7835,50 @@ limitations under the License.
 })();
 
 
+(function(){
+
+  function animate(element) {
+    return {
+      leave: function() {
+        var animationEndCallback = function() {
+          element.classList.remove('leave');
+          element.classList.remove('leave-active');
+
+          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
+          element.removeEventListener('transitionEnd', animationEndCallback);
+        };
+
+        element.addEventListener('webkitTransitionEnd', animationEndCallback);
+        element.addEventListener('transitionEnd', animationEndCallback);
+
+        element.classList.add('leave');
+        element.classList.add('leave-active');
+        return this;
+      },
+      enter: function() {
+        var animationEndCallback = function() {
+
+          element.classList.remove('enter');
+          element.classList.remove('enter-active');
+
+          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
+          element.removeEventListener('transitionEnd', animationEndCallback);
+        };
+        element.addEventListener('webkitTransitionEnd', animationEndCallback);
+        element.addEventListener('transitionEnd', animationEndCallback);
+
+        element.classList.add('enter');
+        element.classList.add('enter-active');
+
+        return this;
+      }
+    };
+  }
+
+  window.onsen = window.onsen || {};
+  window.onsen.animate = animate;
+})();
+
 (function() {
   'use strict';
   Modernizr.testStyles('#modernizr { -webkit-overflow-scrolling:touch }', function(elem, rule) {
@@ -7606,89 +7886,6 @@ limitations under the License.
       'overflowtouch',
       window.getComputedStyle && window.getComputedStyle(elem).getPropertyValue('-webkit-overflow-scrolling') == 'touch');
   });
-
-})();
-
-/* jshint evil:true */
-
-(function(){
-  'use strict';
-
-  // for initialization hook.
-  if (document.readyState === 'loading' || document.readyState == 'uninitialized') {
-    document.write('<ons-dummy-for-init></ons-dummy-for-init>');
-  } else {
-    var dom = document.createElement('ons-dummy-for-init');
-    document.body.appendChild(dom);
-  }
-
-  angular.module('onsen.directives').run(function($compile, $rootScope) {
-    ons.$compile = $compile;
-    $rootScope.$on('$ons-ready', function() {
-      ons.isReady = function() {
-        return true;
-      };
-    });
-  });
-
-  // JS Global facade for Onsen UI.
-  var ons = window.ons = {
-    /**
-     * Bootstrap this document as a Onsen UI application.
-     *
-     * If you want use your AngularJS module, use "ng-app" directive and "angular.module()" manually.
-     */
-    bootstrap : function() {
-      var doc = window.document;
-      if (doc.readyState == 'loading' || doc.readyState == 'uninitialized') {
-        doc.addEventListener('DOMContentLoaded', function() {
-          angular.bootstrap(doc.documentElement, ['onsen']);
-        }, false);
-      } else if (doc.documentElement) {
-        angular.bootstrap(doc.documentElement, ['onsen']);
-      } else {
-        throw new Error('Invalid state');
-      }
-    },
-
-    /**
-     * @return {Boolean}
-     */
-    isReady : function() {
-      return false;
-    },
-
-    /**
-     * @param {HTMLElement} dom
-     */
-    compile : function(dom) {
-      if (!ons.$compile) {
-        throw new Error('ons.$compile() is not ready. Wait for initialization.');
-      }
-
-      if (!(dom instanceof HTMLElement)) {
-        throw new Error('First argument must be an instance of HTMLElement.');
-      }
-      var scope = angular.element(dom).scope();
-      if (!scope) {
-        throw new Error('AngularJS Scope is null. Argument DOM element must be attached in DOM document.');
-      }
-      ons.$compile(dom)(scope);
-    },
-
-    /**
-     * @param {Function} callback
-     */
-    ready : function(callback) {
-      if (ons.isReady()) {
-        callback();
-      } else {
-        angular.module('onsen.directives').run(function($rootScope) {
-          $rootScope.$on('$ons-ready', callback);
-        });
-      }
-    }
-  };
 
 })();
 

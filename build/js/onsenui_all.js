@@ -1,4 +1,4 @@
-/*! onsenui - v1.0.4 - 2014-05-13 */
+/*! onsenui - v1.0.4 - 2014-06-05 */
 /**
  * @license AngularJS v1.2.10
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -20717,17 +20717,27 @@ app.run(["$templateCache", function($templateCache) {
   "use strict";
   $templateCache.put("templates/navigator.tpl",
     "<div class=\"ons-navigator\">\n" +
-    "  <div ng-hide=\"hideToolbar\" class=\"topcoat-navigation-bar ons-navigator__toolbar {{modifierTemplater('topcoat-navigation-bar--*')}}\">\n" +
-    "    <div class=\"ons-navigator__toolbar-content {{modifierTemplater('topcoat-navigation-bar--*__content')}}\">\n" +
-    "      <div class=\"ons-navigator__item topcoat-navigation-bar__bg ons-navigator__left-button-container ons-navigator__left-button-container--transition ons-navigator__left-button-container--hidden {{modifierTemplater('topcoat-navigation-bar--*__bg')}}\">\n" +
-    "        <span class=\"topcoat-icon-button--quiet ons-navigator__left-section\">\n" +
-    "          <i class=\"fa fa-angle-left fa-2x topcoat-navigation-bar__line-height {{modifierTemplater('topcoat-navigation-bar--*__line-height')}}\"></i>\n" +
+    "  <div class=\"topcoat-navigation-bar flex-container\">\n" +
+    "    <div class=\"flex-item left\">\n" +
+    "      <span class=\"back-button-box\">\n" +
+    "        <span class=\"topcoat-icon-button--quiet\">\n" +
+    "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
     "        </span>\n" +
-    "      </div>\n" +
-    "      <div class=\"ons-navigator__right-button ons-navigator__item\">\n" +
-    "        <span class=\"topcoat-icon-button--quiet ons-navigator__right-section-icon\">\n" +
-    "        </span>\n" +
-    "      </div>\n" +
+    "      </span>      \n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item left ons-back-label\">\n" +
+    "\n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item ons-center-box center\">\n" +
+    "      <span>\n" +
+    "        Page 1\n" +
+    "      </span>\n" +
+    "      <span>\n" +
+    "        Title 2\n" +
+    "      </span>\n" +
+    "    </div>\n" +
+    "    <div class=\"flex-item right\">\n" +
+    "      Right\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
@@ -20909,6 +20919,29 @@ app.run(["$templateCache", function($templateCache) {
 }]);
 })();
 
+(function(module) {
+try { app = angular.module("templates-main"); }
+catch(err) { app = angular.module("templates-main", []); }
+app.run(["$templateCache", function($templateCache) {
+  "use strict";
+  $templateCache.put("templates/toolbar.tpl",
+    "<div class=\"topcoat-navigation-bar flex-container\">\n" +
+    "	<div class=\"flex-item left\">\n" +
+    "		<span class=\"topcoat-icon-button--quiet\">\n" +
+    "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
+    "        </span>\n" +
+    "	</div>\n" +
+    "	<div class=\"flex-item title\">\n" +
+    "		Title\n" +
+    "	</div>\n" +
+    "	<div class=\"flex-item right\">\n" +
+    "		Right\n" +
+    "	</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+})();
+
 /*
 Copyright 2013-2014 ASIAL CORPORATION
 
@@ -21004,6 +21037,89 @@ limitations under the License.
       }
     };
   });
+})();
+
+/* jshint evil:true */
+
+(function(){
+  'use strict';
+
+  // for initialization hook.
+  if (document.readyState === 'loading' || document.readyState == 'uninitialized') {
+    document.write('<ons-dummy-for-init></ons-dummy-for-init>');
+  } else {
+    var dom = document.createElement('ons-dummy-for-init');
+    document.body.appendChild(dom);
+  }
+
+  angular.module('onsen.directives').run(function($compile, $rootScope) {
+    ons.$compile = $compile;
+    $rootScope.$on('$ons-ready', function() {
+      ons.isReady = function() {
+        return true;
+      };
+    });
+  });
+
+  // JS Global facade for Onsen UI.
+  var ons = window.ons = {
+    /**
+     * Bootstrap this document as a Onsen UI application.
+     *
+     * If you want use your AngularJS module, use "ng-app" directive and "angular.module()" manually.
+     */
+    bootstrap : function() {
+      var doc = window.document;
+      if (doc.readyState == 'loading' || doc.readyState == 'uninitialized') {
+        doc.addEventListener('DOMContentLoaded', function() {
+          angular.bootstrap(doc.documentElement, ['onsen']);
+        }, false);
+      } else if (doc.documentElement) {
+        angular.bootstrap(doc.documentElement, ['onsen']);
+      } else {
+        throw new Error('Invalid state');
+      }
+    },
+
+    /**
+     * @return {Boolean}
+     */
+    isReady : function() {
+      return false;
+    },
+
+    /**
+     * @param {HTMLElement} dom
+     */
+    compile : function(dom) {
+      if (!ons.$compile) {
+        throw new Error('ons.$compile() is not ready. Wait for initialization.');
+      }
+
+      if (!(dom instanceof HTMLElement)) {
+        throw new Error('First argument must be an instance of HTMLElement.');
+      }
+      var scope = angular.element(dom).scope();
+      if (!scope) {
+        throw new Error('AngularJS Scope is null. Argument DOM element must be attached in DOM document.');
+      }
+      ons.$compile(dom)(scope);
+    },
+
+    /**
+     * @param {Function} callback
+     */
+    ready : function(callback) {
+      if (ons.isReady()) {
+        callback();
+      } else {
+        angular.module('onsen.directives').run(function($rootScope) {
+          $rootScope.$on('$ons-ready', callback);
+        });
+      }
+    }
+  };
+
 })();
 
 /*
@@ -21489,6 +21605,78 @@ limitations under the License.
 
 */
 
+(function(){
+  'use strict';
+
+  var Toolbar = Class.extend({
+    leftButtons: [],
+    rightButtons: [],
+    title: [],
+    init: function(scope, element, attrs){
+      this.scope = scope;
+      this.element = element;
+      this.backButtonBox = this.element[0].querySelector('.back-button-box');
+      this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
+      this.attrs = attrs;
+    },
+
+    pushOptions: function(options){
+      console.log('push options');
+      if(options.title){
+        this.pushCenterContent(options.title);
+      }
+    },
+
+    showBackButton: function(){
+      
+    },
+
+    hideBackButton: function(){
+
+    },
+
+    pushLeftContent: function(leftContent){
+
+    },
+
+    setLeftContent: function(leftContent){
+
+    },
+
+    pushCenterContent: function(centerContent){
+      this.centerBox.append(centerContent);
+    },
+
+    setCenterContent: function(centerContent){
+
+    },
+
+    pushRightContent: function(rightContent){
+
+    },
+
+    setRightContent: function(rightContent){
+
+    },
+
+    popLeftContent: function(){
+
+    },
+
+    popCenterContent: function(){
+
+    },
+
+    popRightContent: function(){
+
+    }
+  });
+
+  window.ons = window.ons || {};
+  window.ons.Toolbar = Toolbar;
+})();
+
+
 (function() {
   'use strict';
   var directives = angular.module('onsen.directives');
@@ -21582,24 +21770,25 @@ limitations under the License.
         this.navigatorItems = [];
 
         this.container = angular.element(element[0].querySelector('.ons-navigator__content'));
-        this.toolbar = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbarEl = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs);
         this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));
-        this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
-        this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
-        this.leftArrow = angular.element(this.leftButtonContainer[0].querySelector('i'));
+        // this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
+        // this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
+        // this.leftArrow = angular.element(this.leftButtonContainer[0].querySelector('i'));
 
-        this.rightSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__right-button'));
-        this.rightSectionIcon = angular.element(this.rightSection[0].querySelector('.ons-navigator__right-section-icon'));
+        // this.rightSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__right-button'));
+        // this.rightSectionIcon = angular.element(this.rightSection[0].querySelector('.ons-navigator__right-section-icon'));
 
-        this.leftButtonClickFn = $parse(scope.onLeftButtonClick);
+        // this.leftButtonClickFn = $parse(scope.onLeftButtonClick);
 
         this.setReady(true);
 
         // fix android 2.3 click event not fired some times when used with sliding menu
-        this.leftButtonContainer.bind('touchend', function() {});
+        // this.leftButtonContainer.bind('touchend', function() {});
 
-        this.leftButtonContainer.bind('click', this.onLeftButtonClicked.bind(this));
-        this.rightSection.bind('click', this.onRightButtonClicked.bind(this));
+        // this.leftButtonContainer.bind('click', this.onLeftButtonClicked.bind(this));
+        // this.rightSection.bind('click', this.onRightButtonClicked.bind(this));
         if (scope.page) {
           var options = {
             title: scope.title,
@@ -21612,11 +21801,11 @@ limitations under the License.
         }
         this.checkiOS7();
 
-        attrs.$observe('title', function(title) {
-          if (title) {
-            this.setTitle(title);
-          }
-        }.bind(this));
+        // attrs.$observe('title', function(title) {
+        //   if (title) {
+        //     this.setTitle(title);
+        //   }
+        // }.bind(this));
 
         this.attachScopeMethods();
       },
@@ -21668,70 +21857,70 @@ limitations under the License.
       },
 
       animateBackLabelIn: function(inNavigatorItem, outNavigatorItem) {
-        var title = outNavigatorItem.options.title;
-        var inBackLabel = angular.element('<div></div>');
-        inBackLabel.addClass(
-          'ons-navigator__back-label ons-navigator__item ' +
-          'topcoat-navigation-bar__line-height topcoat-icon-button--quiet ' +
-          'ons-navigator__back-label--navigate-right ' +
-          this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-        );
-        inBackLabel.bind('click', this.onLeftButtonClicked.bind(this));
-        this.attachFastClickEvent(inBackLabel[0]);
-        inNavigatorItem.backLabel = inBackLabel;
-        if (inNavigatorItem.options.leftButtonIcon) {
-          // no back label if user specify icon
-          inBackLabel[0].style.display = 'none';
-        }
-        this.toolbarContent.prepend(inBackLabel);
-        inBackLabel.text(title);
+        // var title = outNavigatorItem.options.title;
+        // var inBackLabel = angular.element('<div></div>');
+        // inBackLabel.addClass(
+        //   'ons-navigator__back-label ons-navigator__item ' +
+        //   'topcoat-navigation-bar__line-height topcoat-icon-button--quiet ' +
+        //   'ons-navigator__back-label--navigate-right ' +
+        //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+        // );
+        // inBackLabel.bind('click', this.onLeftButtonClicked.bind(this));
+        // this.attachFastClickEvent(inBackLabel[0]);
+        // inNavigatorItem.backLabel = inBackLabel;
+        // if (inNavigatorItem.options.leftButtonIcon) {
+        //   // no back label if user specify icon
+        //   inBackLabel[0].style.display = 'none';
+        // }
+        // this.toolbarContent.prepend(inBackLabel);
+        // inBackLabel.text(title);
 
-        this.toolbarContent[0].offsetWidth;
+        // this.toolbarContent[0].offsetWidth;
 
-        setTimeout(function(){
-          inBackLabel.removeClass('ons-navigator__back-label--navigate-right');
-          inBackLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
-        }, 10);
+        // setTimeout(function(){
+        //   inBackLabel.removeClass('ons-navigator__back-label--navigate-right');
+        //   inBackLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
+        // }, 10);
 
 
-        var outLabel = outNavigatorItem.backLabel;
-        if (outLabel) {
-          outLabel.bind(TRANSITION_END, function transitionEnded(e) {
-            outLabel.remove();
-            outLabel.unbind(transitionEnded);
-          });
-          outLabel.removeClass('ons-navigator__back-label--navigate-center');
-          outLabel.addClass('ons-navigator__back-label--navigate-left');
-        }
+        // var outLabel = outNavigatorItem.backLabel;
+        // if (outLabel) {
+        //   outLabel.bind(TRANSITION_END, function transitionEnded(e) {
+        //     outLabel.remove();
+        //     outLabel.unbind(transitionEnded);
+        //   });
+        //   outLabel.removeClass('ons-navigator__back-label--navigate-center');
+        //   outLabel.addClass('ons-navigator__back-label--navigate-left');
+        // }
       },
 
       animateBackLabelOut: function(inNavigatorItem, outNavigatorItem) {
-        var outLabel = outNavigatorItem.backLabel;
-        var inLabel = inNavigatorItem.backLabel;
-        this.toolbarContent.prepend(inLabel);
+        // var outLabel = outNavigatorItem.backLabel;
+        // var inLabel = inNavigatorItem.backLabel;
+        // this.toolbarContent.prepend(inLabel);
 
-        if (outNavigatorItem.options.leftButtonIcon) {
-          // no back label if user specify icon
-          outLabel.remove();
-        } else {
-          outLabel.bind(TRANSITION_END, function transitionEnded(e) {
-            outLabel.remove();
-            outLabel.unbind(transitionEnded);
-          });
+        // if (outNavigatorItem.options.leftButtonIcon) {
+        //   // no back label if user specify icon
+        //   outLabel.remove();
+        // } else {
+        //   outLabel.bind(TRANSITION_END, function transitionEnded(e) {
+        //     outLabel.remove();
+        //     outLabel.unbind(transitionEnded);
+        //   });
 
-          this.toolbarContent[0].offsetWidth;
-          outLabel.removeClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
-          outLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-right');
-        }
+        //   this.toolbarContent[0].offsetWidth;
+        //   outLabel.removeClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
+        //   outLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-right');
+        // }
 
 
-        if (inLabel) {
-          this.toolbarContent[0].offsetWidth;
-          inLabel.removeClass('ons-navigator__back-label--navigate-left');
-          inLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
-          inLabel.bind('click', this.onLeftButtonClicked.bind(this));
-          this.attachFastClickEvent(inLabel[0]);
-        }
+        // if (inLabel) {
+        //   this.toolbarContent[0].offsetWidth;
+        //   inLabel.removeClass('ons-navigator__back-label--navigate-left');
+        //   inLabel.addClass('ons-navigator__back-label--transition ons-navigator__back-label--navigate-center');
+        //   inLabel.bind('click', this.onLeftButtonClicked.bind(this));
+        //   this.attachFastClickEvent(inLabel[0]);
+        // }
       },
 
       getCurrentNavigatorItem: function() {
@@ -21739,177 +21928,177 @@ limitations under the License.
       },
 
       onLeftButtonClicked: function() {
-        var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
-        if (onLeftButtonClick) {
-          var onLeftButtonClickFn = $parse(onLeftButtonClick);
-          onLeftButtonClickFn(this.scope.$parent);
-        } else {
-          if (this.canPopPage()) {
-            this.popPage();
-          }
-        }
+        // var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
+        // if (onLeftButtonClick) {
+        //   var onLeftButtonClickFn = $parse(onLeftButtonClick);
+        //   onLeftButtonClickFn(this.scope.$parent);
+        // } else {
+        //   if (this.canPopPage()) {
+        //     this.popPage();
+        //   }
+        // }
       },
 
       onRightButtonClicked: function() {
-        var onRightButtonClick = this.getCurrentNavigatorItem().options.onRightButtonClick;
-        if (onRightButtonClick) {
-          var onRightButtonClickFn = $parse(onRightButtonClick);
-          onRightButtonClickFn(this.scope.$parent);
-        }
+        // var onRightButtonClick = this.getCurrentNavigatorItem().options.onRightButtonClick;
+        // if (onRightButtonClick) {
+        //   var onRightButtonClickFn = $parse(onRightButtonClick);
+        //   onRightButtonClickFn(this.scope.$parent);
+        // }
       },
 
       setTitle: function(title) { // no animation
-        if (this.isEmpty()) {
-          return;
-        }
-        var currentNavigatorItem = this.navigatorItems[this.navigatorItems.length - 1];
-        currentNavigatorItem.options.title = title;
-        if (currentNavigatorItem.titleElement) {
-          currentNavigatorItem.titleElement.text(title);
-        }
+        // if (this.isEmpty()) {
+        //   return;
+        // }
+        // var currentNavigatorItem = this.navigatorItems[this.navigatorItems.length - 1];
+        // currentNavigatorItem.options.title = title;
+        // if (currentNavigatorItem.titleElement) {
+        //   currentNavigatorItem.titleElement.text(title);
+        // }
       },
 
       animateTitleIn: function(inNavigatorItem, outNavigatorItem) {
-        var inTitle = inNavigatorItem.options.title || '';
-        var inTitleElement = angular.element('<span>' + inTitle + '</span>');
-        inTitleElement.attr('class', 
-          'ons-navigator__item ons-navigator__title ' +
-          'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
-          'center ons-navigator__title--transition ons-navigator__title--animate-right ' +
-          this.modifierTemplater('topcoat-navigation-bar--*_title') + ' ' +
-          this.modifierTemplater('topcoat-navigation-bar--*_line-height')
-        );
-        var outTitleElement = outNavigatorItem.titleElement;
-        outTitleElement.after(inTitleElement);
-        outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
-          outTitleElement.remove();
-          outTitleElement.unbind(transitionEnded);
-        });
-        inNavigatorItem.titleElement = inTitleElement;
-        setTimeout(function(){
-          inTitleElement.removeClass('ons-navigator__title--animate-right');
-          inTitleElement.addClass('ons-navigator__title--animate-center');
-          outTitleElement.removeClass('ons-navigator__title--animate-center');
-          outTitleElement.addClass('ons-navigator__title--transition ons-navigator__title--animate-left');
-        }, 10);
+        // var inTitle = inNavigatorItem.options.title || '';
+        // var inTitleElement = angular.element('<span>' + inTitle + '</span>');
+        // inTitleElement.attr('class', 
+        //   'ons-navigator__item ons-navigator__title ' +
+        //   'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
+        //   'center ons-navigator__title--transition ons-navigator__title--animate-right ' +
+        //   this.modifierTemplater('topcoat-navigation-bar--*_title') + ' ' +
+        //   this.modifierTemplater('topcoat-navigation-bar--*_line-height')
+        // );
+        // var outTitleElement = outNavigatorItem.titleElement;
+        // outTitleElement.after(inTitleElement);
+        // outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
+        //   outTitleElement.remove();
+        //   outTitleElement.unbind(transitionEnded);
+        // });
+        // inNavigatorItem.titleElement = inTitleElement;
+        // setTimeout(function(){
+        //   inTitleElement.removeClass('ons-navigator__title--animate-right');
+        //   inTitleElement.addClass('ons-navigator__title--animate-center');
+        //   outTitleElement.removeClass('ons-navigator__title--animate-center');
+        //   outTitleElement.addClass('ons-navigator__title--transition ons-navigator__title--animate-left');
+        // }, 10);
       },
 
       animateRightButtonIn: function(inNavigatorItem, outNavigatorItem) {
-        if (inNavigatorItem.rightButtonIconElement || inNavigatorItem.options.rightButtonIcon) {
-          var rightButtonIconElement;
-          if (inNavigatorItem.rightButtonIconElement) {
-            rightButtonIconElement = inNavigatorItem.rightButtonIconElement;
-          } else {
-            rightButtonIconElement = angular.element('<i></i>');
-            rightButtonIconElement.addClass(
-              inNavigatorItem.options.rightButtonIcon +
-              ' topcoat-navigation-bar__line-height ons-navigator--fade ' +
-              this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-            );
-            this.rightSectionIcon.append(rightButtonIconElement); // fix bug on ios. strange that we cant use rightSectionIcon.append() here
-            inNavigatorItem.rightButtonIconElement = rightButtonIconElement;
-          }
+        // if (inNavigatorItem.rightButtonIconElement || inNavigatorItem.options.rightButtonIcon) {
+        //   var rightButtonIconElement;
+        //   if (inNavigatorItem.rightButtonIconElement) {
+        //     rightButtonIconElement = inNavigatorItem.rightButtonIconElement;
+        //   } else {
+        //     rightButtonIconElement = angular.element('<i></i>');
+        //     rightButtonIconElement.addClass(
+        //       inNavigatorItem.options.rightButtonIcon +
+        //       ' topcoat-navigation-bar__line-height ons-navigator--fade ' +
+        //       this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+        //     );
+        //     this.rightSectionIcon.append(rightButtonIconElement); // fix bug on ios. strange that we cant use rightSectionIcon.append() here
+        //     inNavigatorItem.rightButtonIconElement = rightButtonIconElement;
+        //   }
 
-          this.rightSection[0].offsetWidth;
-          setTimeout(function(){
-            rightButtonIconElement.removeClass('ons-navigator__right-button-container--hidden');
-            rightButtonIconElement.addClass('ons-navigator__right-button-container--transition ons-navigator__right-button-container--visible');
-          }, 10);
-        }
+        //   this.rightSection[0].offsetWidth;
+        //   setTimeout(function(){
+        //     rightButtonIconElement.removeClass('ons-navigator__right-button-container--hidden');
+        //     rightButtonIconElement.addClass('ons-navigator__right-button-container--transition ons-navigator__right-button-container--visible');
+        //   }, 10);
+        // }
 
-        if (outNavigatorItem && outNavigatorItem.rightButtonIconElement) {
-          var rightButton = outNavigatorItem.rightButtonIconElement;
-          rightButton.removeClass('ons-navigator__right-button-container--visible');
-          rightButton.addClass('ons-navigator__right-button-container--transition ons-navigator__right-button-container--hidden');
-          rightButton.bind(TRANSITION_END, function transitionEnded(e) {
-            rightButton.remove();
-            rightButton.unbind(transitionEnded);
-          });
-        }
+        // if (outNavigatorItem && outNavigatorItem.rightButtonIconElement) {
+        //   var rightButton = outNavigatorItem.rightButtonIconElement;
+        //   rightButton.removeClass('ons-navigator__right-button-container--visible');
+        //   rightButton.addClass('ons-navigator__right-button-container--transition ons-navigator__right-button-container--hidden');
+        //   rightButton.bind(TRANSITION_END, function transitionEnded(e) {
+        //     rightButton.remove();
+        //     rightButton.unbind(transitionEnded);
+        //   });
+        // }
 
       },
 
       animateRightButtonOut: function(inNavigatorItem, outNavigatorItem) {
-        if (outNavigatorItem.rightButtonIconElement) {
-          var outRightButton = outNavigatorItem.rightButtonIconElement;
-          this.toolbarContent[0].offsetWidth;
-          outRightButton.removeClass('ons-navigator__right-button--visible');
-          outRightButton.addClass('ons-navigator__right-button--transition ons-navigator__right-button--hidden');
-          outRightButton.bind(TRANSITION_END, function transitionEnded(e) {
-            outRightButton.remove();
-            outRightButton.unbind(transitionEnded);
-          });
-        }
-        if (inNavigatorItem.rightButtonIconElement) {
-          var rightButton = inNavigatorItem.rightButtonIconElement;
-          this.rightSectionIcon.append(rightButton);
-          this.rightSection[0].offsetWidth;
-          rightButton.removeClass('ons-navigator__right-button--hidden');
-          rightButton.addClass('ons-navigator__right-button--transition ons-navigator__right-button--visible');
-        }
+        // if (outNavigatorItem.rightButtonIconElement) {
+        //   var outRightButton = outNavigatorItem.rightButtonIconElement;
+        //   this.toolbarContent[0].offsetWidth;
+        //   outRightButton.removeClass('ons-navigator__right-button--visible');
+        //   outRightButton.addClass('ons-navigator__right-button--transition ons-navigator__right-button--hidden');
+        //   outRightButton.bind(TRANSITION_END, function transitionEnded(e) {
+        //     outRightButton.remove();
+        //     outRightButton.unbind(transitionEnded);
+        //   });
+        // }
+        // if (inNavigatorItem.rightButtonIconElement) {
+        //   var rightButton = inNavigatorItem.rightButtonIconElement;
+        //   this.rightSectionIcon.append(rightButton);
+        //   this.rightSection[0].offsetWidth;
+        //   rightButton.removeClass('ons-navigator__right-button--hidden');
+        //   rightButton.addClass('ons-navigator__right-button--transition ons-navigator__right-button--visible');
+        // }
       },
 
       setLeftButton: function(navigatorItem) {
-        var leftButtonIcon = navigatorItem.options.leftButtonIcon;
-        if (leftButtonIcon) {
-          this.setBackButtonIcon(leftButtonIcon);
-          this.showBackButton();
-        } else {
-          // no icon
-          if (this.canPopPage()) {
-            this.showBackButton();
-            this.setBackButtonIconAsLeftArrow();
-          } else {
-            // no icon and is root page
-            this.hideBackButton();
-          }
-        }
+        // var leftButtonIcon = navigatorItem.options.leftButtonIcon;
+        // if (leftButtonIcon) {
+        //   this.setBackButtonIcon(leftButtonIcon);
+        //   this.showBackButton();
+        // } else {
+        //   // no icon
+        //   if (this.canPopPage()) {
+        //     this.showBackButton();
+        //     this.setBackButtonIconAsLeftArrow();
+        //   } else {
+        //     // no icon and is root page
+        //     this.hideBackButton();
+        //   }
+        // }
       },
 
       setBackButtonIconAsLeftArrow: function() {
-        this.leftArrow.attr('class', 
-          'fa fa-angle-left fa-2x topcoat-navigation-bar__line-height ' +
-          this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-        );
+        // this.leftArrow.attr('class', 
+        //   'fa fa-angle-left fa-2x topcoat-navigation-bar__line-height ' +
+        //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+        // );
       },
 
       setBackButtonIcon: function(iconClass) {
-        this.leftArrow.attr('class',
-          iconClass +
-          ' topcoat-navigation-bar__line-height ' +
-          this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-        );
+        // this.leftArrow.attr('class',
+        //   iconClass +
+        //   ' topcoat-navigation-bar__line-height ' +
+        //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+        // );
       },
 
       showBackButton: function() {
-        this.toolbarContent[0].offsetWidth;
-        var that = this;
-        setTimeout(function(){
-          that.leftButtonContainer.removeClass('ons-navigator__left-button-container--hidden');
-          that.leftButtonContainer.addClass('ons-navigator__left-button-container--transition ons-navigator__left-button-container--visible');
-        }, 200);
+        // this.toolbarContent[0].offsetWidth;
+        // var that = this;
+        // setTimeout(function(){
+        //   that.leftButtonContainer.removeClass('ons-navigator__left-button-container--hidden');
+        //   that.leftButtonContainer.addClass('ons-navigator__left-button-container--transition ons-navigator__left-button-container--visible');
+        // }, 200);
 
       },
 
       hideBackButton: function() {
-        this.leftButtonContainer.removeClass('ons-navigator__left-button-container--visible');
-        this.leftButtonContainer.addClass('ons-navigator__left-button-container--hidden');
+        // this.leftButtonContainer.removeClass('ons-navigator__left-button-container--visible');
+        // this.leftButtonContainer.addClass('ons-navigator__left-button-container--hidden');
       },
 
       animateTitleOut: function(currentNavigatorItem, previousNavigatorItem) {
 
-        var inTitleElement = previousNavigatorItem.titleElement;
-        var outTitleElement = currentNavigatorItem.titleElement;
-        outTitleElement.after(inTitleElement);
-        this.element[0].offsetWidth;
-        outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
-          outTitleElement.remove();
-          outTitleElement.unbind(transitionEnded);
-        });
-        outTitleElement.removeClass('ons-navigator__title--animate-center');
-        outTitleElement.addClass('ons-navigator__title--transition ons-navigator__title--animate-right');
-        inTitleElement.removeClass('ons-navigator__title--animate-left');
-        inTitleElement.addClass('ons-navigator__title--animate-center');
+        // var inTitleElement = previousNavigatorItem.titleElement;
+        // var outTitleElement = currentNavigatorItem.titleElement;
+        // outTitleElement.after(inTitleElement);
+        // this.element[0].offsetWidth;
+        // outTitleElement.bind(TRANSITION_END, function transitionEnded(e) {
+        //   outTitleElement.remove();
+        //   outTitleElement.unbind(transitionEnded);
+        // });
+        // outTitleElement.removeClass('ons-navigator__title--animate-center');
+        // outTitleElement.addClass('ons-navigator__title--transition ons-navigator__title--animate-right');
+        // inTitleElement.removeClass('ons-navigator__title--animate-left');
+        // inTitleElement.addClass('ons-navigator__title--animate-center');
       },
 
       animatePageIn: function(inPage, outPage) {
@@ -22042,34 +22231,36 @@ limitations under the License.
 
           setTimeout(function() {
             this.animatePageIn(pager, previousPage);
-            this.animateTitleIn(navigatorItem, previousNavigatorItem);
 
-            this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
-            this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
+            this.toolbar.pushOptions(navigatorItem.options);
+            // this.animateTitleIn(navigatorItem, previousNavigatorItem);
+
+            // this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
+            // this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
           }.bind(this), 0);
 
         } else {
           // root page
-          var titleElement = angular.element('<div></div>');
+          // var titleElement = angular.element('<div></div>');
 
-          titleElement.addClass(
-            'ons-navigator__item ons-navigator__title ' +
-            'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
-            'center ons-navigator__title--animate-center ' + 
-            this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
-            this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-          );
+          // titleElement.addClass(
+          //   'ons-navigator__item ons-navigator__title ' +
+          //   'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
+          //   'center ons-navigator__title--animate-center ' + 
+          //   this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
+          //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+          // );
 
-          if (options.title) {
-            titleElement.text(options.title);
-          }
-          this.toolbarContent.append(titleElement);
-          navigatorItem.titleElement = titleElement;
-          this.animateRightButtonIn(navigatorItem, null);
+          // if (options.title) {
+          //   titleElement.text(options.title);
+          // }
+          // this.toolbarContent.append(titleElement);
+          // navigatorItem.titleElement = titleElement;
+          // this.animateRightButtonIn(navigatorItem, null);
           this.setReady(true);
         }
         this.navigatorItems.push(navigatorItem);
-        this.setLeftButton(navigatorItem);
+        // this.setLeftButton(navigatorItem);
       },
 
       appendPage: function(templateHTML, options) {
@@ -22130,11 +22321,11 @@ limitations under the License.
         var previousPage = previousNavigatorItem.page;
         this.animatePageOut(currentPage, previousPage);
 
-        this.animateTitleOut(currentNavigatorItem, previousNavigatorItem);
-        this.animateBackLabelOut(previousNavigatorItem, currentNavigatorItem);
+        // this.animateTitleOut(currentNavigatorItem, previousNavigatorItem);
+        // this.animateBackLabelOut(previousNavigatorItem, currentNavigatorItem);
 
-        this.setLeftButton(previousNavigatorItem);
-        this.animateRightButtonOut(previousNavigatorItem, currentNavigatorItem);
+        // this.setLeftButton(previousNavigatorItem);
+        // this.animateRightButtonOut(previousNavigatorItem, currentNavigatorItem);
         currentNavigatorItem.pageScope.$destroy();
       }
     });
@@ -24309,6 +24500,70 @@ limitations under the License.
 (function(){
   'use strict';
 
+  var directives = angular.module('onsen.directives');
+
+  var Toolbar = Class.extend({
+    leftButtons: [],
+    rightButtons: [],
+    title: [],
+    init: function(scope, element, attrs){
+      this.scope = scope;
+      this.element = element;
+      this.attrs = attrs;
+    },
+
+    showBackButton: function(){
+
+    },
+
+    hideBackButton: function(){
+
+    },
+
+    pushLeftContent: function(leftContent){
+
+    },
+
+    pushCenterContent: function(centerContent){
+
+    },
+
+    pushRightContent: function(rightContent){
+
+    },
+
+    popLeftContent: function(){
+
+    },
+
+    popCenterContent: function(){
+
+    },
+
+    popRightContent: function(){
+
+    }
+  });
+
+  directives.directive('onsToolbar', function(ONSEN_CONSTANTS) {
+    return {
+      restrict: 'E',
+      replace: false,
+      transclude: true,
+      scope: true,
+      templateUrl: ONSEN_CONSTANTS.DIRECTIVE_TEMPLATE_URL + '/toolbar.tpl',
+      link: function($scope, element, attrs) {
+        var toolbar = new Toolbar($scope, element, attrs);
+        
+      }
+    };
+  });
+})();
+
+
+(function(){
+  'use strict';
+
   angular.module('onsen.services', []);
 })();
 
@@ -24476,6 +24731,83 @@ limitations under the License.
     return Class;
   };
 })();
+// The MIT License (MIT)
+// Copyright © 2014 Remy Sharp, http://remysharp.com
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+(function () {
+
+if (typeof window.Element === "undefined" || "classList" in document.documentElement) return;
+
+var prototype = Array.prototype,
+    push = prototype.push,
+    splice = prototype.splice,
+    join = prototype.join;
+
+function DOMTokenList(el) {
+  this.el = el;
+  // The className needs to be trimmed and split on whitespace
+  // to retrieve a list of classes.
+  var classes = el.className.replace(/^\s+|\s+$/g,'').split(/\s+/);
+  for (var i = 0; i < classes.length; i++) {
+    push.call(this, classes[i]);
+  }
+};
+
+DOMTokenList.prototype = {
+  add: function(token) {
+    if(this.contains(token)) return;
+    push.call(this, token);
+    this.el.className = this.toString();
+  },
+  contains: function(token) {
+    return this.el.className.indexOf(token) != -1;
+  },
+  item: function(index) {
+    return this[index] || null;
+  },
+  remove: function(token) {
+    if (!this.contains(token)) return;
+    for (var i = 0; i < this.length; i++) {
+      if (this[i] == token) break;
+    }
+    splice.call(this, i, 1);
+    this.el.className = this.toString();
+  },
+  toString: function() {
+    return join.call(this, ' ');
+  },
+  toggle: function(token) {
+    if (!this.contains(token)) {
+      this.add(token);
+    } else {
+      this.remove(token);
+    }
+
+    return this.contains(token);
+  }
+};
+
+window.DOMTokenList = DOMTokenList;
+
+function defineElementGetter (obj, prop, getter) {
+    if (Object.defineProperty) {
+        Object.defineProperty(obj, prop,{
+            get : getter
+        });
+    } else {
+        obj.__defineGetter__(prop, getter);
+    }
+}
+
+defineElementGetter(Element.prototype, 'classList', function () {
+  return new DOMTokenList(this);
+});
+
+})();
+
 /**
  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
  *
@@ -28097,6 +28429,50 @@ Modernizr.load=function(){yepnope.apply(window,[].slice.call(arguments,0));};
     window.Viewport = Viewport;
 })();
 
+(function(){
+
+  function animate(element) {
+    return {
+      leave: function() {
+        var animationEndCallback = function() {
+          element.classList.remove('leave');
+          element.classList.remove('leave-active');
+
+          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
+          element.removeEventListener('transitionEnd', animationEndCallback);
+        };
+
+        element.addEventListener('webkitTransitionEnd', animationEndCallback);
+        element.addEventListener('transitionEnd', animationEndCallback);
+
+        element.classList.add('leave');
+        element.classList.add('leave-active');
+        return this;
+      },
+      enter: function() {
+        var animationEndCallback = function() {
+
+          element.classList.remove('enter');
+          element.classList.remove('enter-active');
+
+          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
+          element.removeEventListener('transitionEnd', animationEndCallback);
+        };
+        element.addEventListener('webkitTransitionEnd', animationEndCallback);
+        element.addEventListener('transitionEnd', animationEndCallback);
+
+        element.classList.add('enter');
+        element.classList.add('enter-active');
+
+        return this;
+      }
+    };
+  }
+
+  window.onsen = window.onsen || {};
+  window.onsen.animate = animate;
+})();
+
 (function() {
   'use strict';
   Modernizr.testStyles('#modernizr { -webkit-overflow-scrolling:touch }', function(elem, rule) {
@@ -28104,89 +28480,6 @@ Modernizr.load=function(){yepnope.apply(window,[].slice.call(arguments,0));};
       'overflowtouch',
       window.getComputedStyle && window.getComputedStyle(elem).getPropertyValue('-webkit-overflow-scrolling') == 'touch');
   });
-
-})();
-
-/* jshint evil:true */
-
-(function(){
-  'use strict';
-
-  // for initialization hook.
-  if (document.readyState === 'loading' || document.readyState == 'uninitialized') {
-    document.write('<ons-dummy-for-init></ons-dummy-for-init>');
-  } else {
-    var dom = document.createElement('ons-dummy-for-init');
-    document.body.appendChild(dom);
-  }
-
-  angular.module('onsen.directives').run(function($compile, $rootScope) {
-    ons.$compile = $compile;
-    $rootScope.$on('$ons-ready', function() {
-      ons.isReady = function() {
-        return true;
-      };
-    });
-  });
-
-  // JS Global facade for Onsen UI.
-  var ons = window.ons = {
-    /**
-     * Bootstrap this document as a Onsen UI application.
-     *
-     * If you want use your AngularJS module, use "ng-app" directive and "angular.module()" manually.
-     */
-    bootstrap : function() {
-      var doc = window.document;
-      if (doc.readyState == 'loading' || doc.readyState == 'uninitialized') {
-        doc.addEventListener('DOMContentLoaded', function() {
-          angular.bootstrap(doc.documentElement, ['onsen']);
-        }, false);
-      } else if (doc.documentElement) {
-        angular.bootstrap(doc.documentElement, ['onsen']);
-      } else {
-        throw new Error('Invalid state');
-      }
-    },
-
-    /**
-     * @return {Boolean}
-     */
-    isReady : function() {
-      return false;
-    },
-
-    /**
-     * @param {HTMLElement} dom
-     */
-    compile : function(dom) {
-      if (!ons.$compile) {
-        throw new Error('ons.$compile() is not ready. Wait for initialization.');
-      }
-
-      if (!(dom instanceof HTMLElement)) {
-        throw new Error('First argument must be an instance of HTMLElement.');
-      }
-      var scope = angular.element(dom).scope();
-      if (!scope) {
-        throw new Error('AngularJS Scope is null. Argument DOM element must be attached in DOM document.');
-      }
-      ons.$compile(dom)(scope);
-    },
-
-    /**
-     * @param {Function} callback
-     */
-    ready : function(callback) {
-      if (ons.isReady()) {
-        callback();
-      } else {
-        angular.module('onsen.directives').run(function($rootScope) {
-          $rootScope.$on('$ons-ready', callback);
-        });
-      }
-    }
-  };
 
 })();
 

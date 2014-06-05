@@ -1114,6 +1114,9 @@ input[type="checkbox"]:disabled:active + .topcoat-checkbox__checkmark:before {
   white-space: nowrap;
   overflow: hidden;
 }
+.topcoat-navigation-bar * {
+  line-height: 44px;
+}
 .topcoat-navigation-bar {
   height: 54px;
   height: 44px;

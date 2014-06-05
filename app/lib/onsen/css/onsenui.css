@@ -1,4 +1,4 @@
-/*! onsenui - v1.0.4 - 2014-05-16 */
+/*! onsenui - v1.0.4 - 2014-06-05 */
 /*
 Copyright 2013-2014 ASIAL CORPORATION
 
@@ -1274,6 +1274,22 @@ ons-navigator {
   -moz-box-ordinal-group: 1;
   -ms-flex-order: 0;
   order: 0;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 1 auto;
+  -moz-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  -webkit-align-self: auto;
+  -ms-flex-item-align: auto;
+  align-self: auto;
+}
+
+.flex-item:nth-child(3) {
+  -webkit-box-ordinal-group: 1;
+  -webkit-order: 0;
+  -moz-box-ordinal-group: 1;
+  -ms-flex-order: 0;
+  order: 0;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
   -moz-box-flex: 1;
@@ -1284,7 +1300,7 @@ ons-navigator {
   align-self: auto;
 }
 
-.flex-item:nth-child(3) {
+.flex-item:nth-child(4) {
   -webkit-box-ordinal-group: 1;
   -webkit-order: 0;
   -moz-box-ordinal-group: 1;

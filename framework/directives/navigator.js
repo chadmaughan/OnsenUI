@@ -26,7 +26,15 @@ limitations under the License.
       this.scope = scope;
       this.element = element;
       this.backButtonBox = this.element[0].querySelector('.back-button-box');
+      this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
       this.attrs = attrs;
+    },
+
+    pushOptions: function(options){
+      console.log('push options');
+      if(options.title){
+        this.pushCenterContent(options.title);
+      }
     },
 
     showBackButton: function(){
@@ -41,11 +49,23 @@ limitations under the License.
 
     },
 
+    setLeftContent: function(leftContent){
+
+    },
+
     pushCenterContent: function(centerContent){
+      this.centerBox.append(centerContent);
+    },
+
+    setCenterContent: function(centerContent){
 
     },
 
     pushRightContent: function(rightContent){
+
+    },
+
+    setRightContent: function(rightContent){
 
     },
 
@@ -61,6 +81,9 @@ limitations under the License.
 
     }
   });
+
+  window.ons = window.ons || {};
+  window.ons.Toolbar = Toolbar;
 })();
 
 
@@ -157,7 +180,8 @@ limitations under the License.
         this.navigatorItems = [];
 
         this.container = angular.element(element[0].querySelector('.ons-navigator__content'));
-        this.toolbar = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbarEl = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
+        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs);
         this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));
         // this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
         // this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
@@ -617,7 +641,9 @@ limitations under the License.
 
           setTimeout(function() {
             this.animatePageIn(pager, previousPage);
-            this.animateTitleIn(navigatorItem, previousNavigatorItem);
+
+            this.toolbar.pushOptions(navigatorItem.options);
+            // this.animateTitleIn(navigatorItem, previousNavigatorItem);
 
             // this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
             // this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
@@ -625,19 +651,19 @@ limitations under the License.
 
         } else {
           // root page
-          var titleElement = angular.element('<div></div>');
+          // var titleElement = angular.element('<div></div>');
 
-          titleElement.addClass(
-            'ons-navigator__item ons-navigator__title ' +
-            'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
-            'center ons-navigator__title--animate-center ' + 
-            this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
-            this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-          );
+          // titleElement.addClass(
+          //   'ons-navigator__item ons-navigator__title ' +
+          //   'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
+          //   'center ons-navigator__title--animate-center ' + 
+          //   this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
+          //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
+          // );
 
-          if (options.title) {
-            titleElement.text(options.title);
-          }
+          // if (options.title) {
+          //   titleElement.text(options.title);
+          // }
           // this.toolbarContent.append(titleElement);
           // navigatorItem.titleElement = titleElement;
           // this.animateRightButtonIn(navigatorItem, null);
