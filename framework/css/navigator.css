@@ -118,3 +118,41 @@ ons-navigator {
 .topcoat-navigation-bar > .title {
   text-align: center;
 }
+
+
+.topcoat-navigation-bar > div {
+  position: absolute;
+}
+
+
+.ons-center-box {
+  text-align: center;
+}
+
+.ons-center-box > * {
+  position: absolute;
+}
+
+.debug {
+  border: 1px solid gray;
+}
+
+.ons-center-item {  
+  width: 100%;
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+}
+
+.ons-center-item.ons-right {
+  -webkit-transform: translateX(100%);
+}
+
+.ons-center-item.ons-center {
+  -webkit-transform: translateX(0);  
+  opacity: 1;
+}
+
+.ons-center-item.ons-left {
+  -webkit-transform: translateX(-30%);  
+  opacity: 0;
+}

@@ -122,26 +122,19 @@ app.run(["$templateCache", function($templateCache) {
   "use strict";
   $templateCache.put("templates/navigator.tpl",
     "<div class=\"ons-navigator\">\n" +
-    "  <div class=\"topcoat-navigation-bar flex-container\">\n" +
-    "    <div class=\"flex-item left\">\n" +
-    "      <span class=\"back-button-box\">\n" +
+    "  <div class=\"topcoat-navigation-bar\">\n" +
+    "    <div class=\"ons-back-button-box\">      \n" +
     "        <span class=\"topcoat-icon-button--quiet\">\n" +
     "          <i class=\"fa fa-angle-left fa-2x\"></i>\n" +
-    "        </span>\n" +
-    "      </span>      \n" +
+    "        </span>      \n" +
     "    </div>\n" +
-    "    <div class=\"flex-item left ons-back-label\">\n" +
+    "    <div class=\"ons-back-label-box\">\n" +
     "\n" +
     "    </div>\n" +
-    "    <div class=\"flex-item ons-center-box center\">\n" +
-    "      <span>\n" +
-    "        Page 1\n" +
-    "      </span>\n" +
-    "      <span>\n" +
-    "        Title 2\n" +
-    "      </span>\n" +
+    "    <div class=\"ons-center-box\">\n" +
+    "      \n" +
     "    </div>\n" +
-    "    <div class=\"flex-item right\">\n" +
+    "    <div class=\"ons-right-box\">\n" +
     "      Right\n" +
     "    </div>\n" +
     "  </div>\n" +

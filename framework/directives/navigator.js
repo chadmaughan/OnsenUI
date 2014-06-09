@@ -21,13 +21,32 @@ limitations under the License.
   var Toolbar = Class.extend({
     leftButtons: [],
     rightButtons: [],
-    title: [],
+    centerItems: [],
     init: function(scope, element, attrs){
       this.scope = scope;
       this.element = element;
-      this.backButtonBox = this.element[0].querySelector('.back-button-box');
+      this.backButtonBox = angular.element(this.element[0].querySelector('.ons-back-button-box'));
+      this.backLabelBox = angular.element(this.element[0].querySelector('.ons-back-label-box'));
       this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
+      this.rightBox = angular.element(this.element[0].querySelector('.ons-right-box'));
       this.attrs = attrs;
+
+      setTimeout(this.layout.bind(this), 10);      
+    },
+
+    layout: function(){
+      var containerWidth = this.element[0].clientWidth;
+      var backButtonBoxWidth = this.backButtonBox[0].clientWidth;
+      var backLabelBoxWidth = this.backLabelBox[0].clientWidth;
+      var rightBoxWidth = this.rightBox[0].clientWidth;
+
+      var remainingWidth = containerWidth - (backButtonBoxWidth + backLabelBoxWidth + rightBoxWidth);
+      var centerBoxWidth = remainingWidth;
+
+      this.backLabelBox[0].style.left = backButtonBoxWidth + 'px';
+      this.centerBox[0].style.left = backButtonBoxWidth + backLabelBoxWidth + 'px';
+      this.centerBox[0].style.width = remainingWidth + 'px';
+      this.rightBox[0].style.right = '0px';
     },
 
     pushOptions: function(options){
@@ -35,6 +54,10 @@ limitations under the License.
       if(options.title){
         this.pushCenterContent(options.title);
       }
+    },
+
+    popOptions: function(){
+      this.popCenterContent();
     },
 
     showBackButton: function(){
@@ -53,8 +76,36 @@ limitations under the License.
 
     },
 
-    pushCenterContent: function(centerContent){
-      this.centerBox.append(centerContent);
+    pushBackLabelContent: function(content){
+
+    },
+
+    setBackLabelContent: function(content){
+
+    },
+
+    pushCenterContent: function(content){
+      if(typeof content === 'string'){
+        var newContent = angular.element(document.createElement('div'));
+        newContent.append(content);
+
+        content = newContent;
+      }
+      content[0].classList.add('ons-center-item');
+      this.centerBox.append(content);
+
+      var animator = new ons.Animator(content[0]);
+
+      if(this.centerItems.length > 0){
+        var previousContentItem = this.centerItems[this.centerItems.length - 1];        
+        previousContentItem.animator.toLeft();
+        animator.toCenter();        
+      }
+
+      this.centerItems.push({
+        animator: animator,
+        content: content
+      });
     },
 
     setCenterContent: function(centerContent){
@@ -74,7 +125,15 @@ limitations under the License.
     },
 
     popCenterContent: function(){
+      var currentCenterItem = this.centerItems[this.centerItems.length - 1];
+      var previousCenterItem = this.centerItems[this.centerItems.length - 2];
 
+      currentCenterItem.animator.toRight(function(){
+        currentCenterItem.content.remove();
+      });
+      previousCenterItem.animator.toCenter();
+
+      this.centerItems.pop();
     },
 
     popRightContent: function(){
@@ -640,9 +699,7 @@ limitations under the License.
           pager.addClass('ons-navigator__pager--navigate-right');
 
           setTimeout(function() {
-            this.animatePageIn(pager, previousPage);
-
-            this.toolbar.pushOptions(navigatorItem.options);
+            this.animatePageIn(pager, previousPage);            
             // this.animateTitleIn(navigatorItem, previousNavigatorItem);
 
             // this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
@@ -669,6 +726,7 @@ limitations under the License.
           // this.animateRightButtonIn(navigatorItem, null);
           this.setReady(true);
         }
+        this.toolbar.pushOptions(navigatorItem.options);
         this.navigatorItems.push(navigatorItem);
         // this.setLeftButton(navigatorItem);
       },
@@ -730,6 +788,7 @@ limitations under the License.
         var currentPage = currentNavigatorItem.page;
         var previousPage = previousNavigatorItem.page;
         this.animatePageOut(currentPage, previousPage);
+        this.toolbar.popOptions();
 
         // this.animateTitleOut(currentNavigatorItem, previousNavigatorItem);
         // this.animateBackLabelOut(previousNavigatorItem, currentNavigatorItem);
