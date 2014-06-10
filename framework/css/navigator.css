@@ -156,3 +156,23 @@ ons-navigator {
   -webkit-transform: translateX(-30%);  
   opacity: 0;
 }
+
+
+.ons-back-label-item {
+  transition-duration: 400ms;
+  animation-timing-function: cubic-bezier(.1, .7, .1, 1);
+}
+
+.ons-back-label-item.ons-right {
+  -webkit-transform: translateX(1200%);
+  opacity: 0;
+}
+
+.ons-back-label-item.ons-center {
+  -webkit-transform: translateX(0);
+  opacity: 1;    
+}
+
+.ons-back-label-item.ons-left {
+  -webkit-transform: translateX(-100%);    
+}

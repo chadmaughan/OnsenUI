@@ -22,6 +22,7 @@ limitations under the License.
     leftButtons: [],
     rightButtons: [],
     centerItems: [],
+    backLabelItems: [],
     init: function(scope, element, attrs){
       this.scope = scope;
       this.element = element;
@@ -58,6 +59,7 @@ limitations under the License.
 
     popOptions: function(){
       this.popCenterContent();
+      this.popBackLabelContent();
     },
 
     showBackButton: function(){
@@ -77,7 +79,23 @@ limitations under the License.
     },
 
     pushBackLabelContent: function(content){
+      var clone = content.clone();
+      clone.attr('class', 'ons-back-label-item');
+      this.backLabelBox.append(clone);
+      var animator = new ons.Animator(clone[0]);
+      animator.toCenter();
 
+      this.backLabelItems.push({
+        content: clone,
+        animator: animator
+      });
+    },
+
+    popBackLabelContent: function(){
+      var currentItem = this.backLabelItems.pop();
+      currentItem.animator.toRight(function(){
+        currentItem.content.remove();
+      });
     },
 
     setBackLabelContent: function(content){
@@ -97,7 +115,9 @@ limitations under the License.
       var animator = new ons.Animator(content[0]);
 
       if(this.centerItems.length > 0){
-        var previousContentItem = this.centerItems[this.centerItems.length - 1];        
+        var previousContentItem = this.centerItems[this.centerItems.length - 1];
+        this.pushBackLabelContent(previousContentItem.content);
+
         previousContentItem.animator.toLeft();
         animator.toCenter();        
       }
