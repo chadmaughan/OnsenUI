@@ -129,7 +129,7 @@ app.run(["$templateCache", function($templateCache) {
     "        </span>      \n" +
     "    </div>\n" +
     "    <div class=\"ons-back-label-box\">\n" +
-    "\n" +
+    "      <div class=\"ons-back-label-content\"></div>\n" +
     "    </div>\n" +
     "    <div class=\"ons-center-box\">\n" +
     "      \n" +

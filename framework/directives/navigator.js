@@ -23,11 +23,13 @@ limitations under the License.
     rightButtons: [],
     centerItems: [],
     backLabelItems: [],
-    init: function(scope, element, attrs){
+    init: function(scope, element, attrs, $compile){
       this.scope = scope;
       this.element = element;
+      this.$compile = $compile;
       this.backButtonBox = angular.element(this.element[0].querySelector('.ons-back-button-box'));
       this.backLabelBox = angular.element(this.element[0].querySelector('.ons-back-label-box'));
+      this.backLabelContent = angular.element(this.element[0].querySelector('.ons-back-label-content'));
       this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
       this.rightBox = angular.element(this.element[0].querySelector('.ons-right-box'));
       this.attrs = attrs;
@@ -50,10 +52,10 @@ limitations under the License.
       this.rightBox[0].style.right = '0px';
     },
 
-    pushOptions: function(options){
+    pushOptions: function(options, pageScope){
       console.log('push options');
       if(options.title){
-        this.pushCenterContent(options.title);
+        this.pushCenterContent(options.title, pageScope);
       }
     },
 
@@ -79,11 +81,17 @@ limitations under the License.
     },
 
     pushBackLabelContent: function(content){
+      
       var clone = content.clone();
       clone.attr('class', 'ons-back-label-item');
-      this.backLabelBox.append(clone);
+      this.backLabelContent.append(clone);
       var animator = new ons.Animator(clone[0]);
       animator.toCenter();
+
+      if(this.backLabelItems.length > 0){
+        var currentItem = this.backLabelItems[this.backLabelItems.length -1];
+        currentItem.animator.toLeft();
+      }
 
       this.backLabelItems.push({
         content: clone,
@@ -92,40 +100,56 @@ limitations under the License.
     },
 
     popBackLabelContent: function(){
-      var currentItem = this.backLabelItems.pop();
+      var currentItem = this.backLabelItems.pop();      
       currentItem.animator.toRight(function(){
         currentItem.content.remove();
       });
+
+      if(this.backLabelItems.length > 0){
+        var previousItem = this.backLabelItems[this.backLabelItems.length -1];
+        previousItem.animator.toCenter();
+      }      
     },
 
     setBackLabelContent: function(content){
 
     },
 
-    pushCenterContent: function(content){
-      if(typeof content === 'string'){
-        var newContent = angular.element(document.createElement('div'));
-        newContent.append(content);
+    pushCenterContent: function(content, pageScope){
 
-        content = newContent;
-      }
-      content[0].classList.add('ons-center-item');
-      this.centerBox.append(content);
+      setTimeout(function(){
+        if(typeof content === 'string'){
+          var newContent = angular.element(document.createElement('div'));
+          newContent.append(content);
 
-      var animator = new ons.Animator(content[0]);
+          content = newContent;
+        }
 
-      if(this.centerItems.length > 0){
-        var previousContentItem = this.centerItems[this.centerItems.length - 1];
-        this.pushBackLabelContent(previousContentItem.content);
+        content = content.clone();
+        content[0].classList.add('ons-center-item');
+        content = this.$compile(content)(pageScope.$$childHead.$$childHead);
+        this.centerBox.append(content);        
 
-        previousContentItem.animator.toLeft();
-        animator.toCenter();        
-      }
+        var animator = new ons.Animator(content[0]);
 
-      this.centerItems.push({
-        animator: animator,
-        content: content
-      });
+        if(this.centerItems.length > 0){
+          var previousContentItem = this.centerItems[this.centerItems.length - 1];
+          this.pushBackLabelContent(previousContentItem.content);
+
+          previousContentItem.animator.toLeft();
+          animator.toCenter();        
+        }
+
+        this.centerItems.push({
+          animator: animator,
+          content: content
+        });
+
+        setTimeout(function(){
+          pageScope.$digest();
+        }, 10);
+      }.bind(this), 0);
+      
     },
 
     setCenterContent: function(centerContent){
@@ -260,7 +284,7 @@ limitations under the License.
 
         this.container = angular.element(element[0].querySelector('.ons-navigator__content'));
         this.toolbarEl = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
-        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs);
+        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs, $compile);
         this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));
         // this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
         // this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
@@ -692,7 +716,7 @@ limitations under the License.
             }
 
             var $navigatorToolbar = angular.element(navigatorToolbar);
-            var title = $navigatorToolbar.attr('title');
+            var title = angular.element($navigatorToolbar[0].querySelector('.center'));
             var leftButtonIcon = $navigatorToolbar.attr('left-button-icon');
             var rightButtonIcon = $navigatorToolbar.attr('right-button-icon');
             var onLeftButtonClick = $navigatorToolbar.attr('on-left-button-click');
@@ -746,7 +770,7 @@ limitations under the License.
           // this.animateRightButtonIn(navigatorItem, null);
           this.setReady(true);
         }
-        this.toolbar.pushOptions(navigatorItem.options);
+        this.toolbar.pushOptions(navigatorItem.options, pageScope);
         this.navigatorItems.push(navigatorItem);
         // this.setLeftButton(navigatorItem);
       },

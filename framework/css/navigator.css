@@ -16,7 +16,7 @@ limitations under the License.
  */
 
 ons-navigator-toolbar {
-  display: none;
+  /*display: none;*/
 }
 
 ons-navigator {
@@ -159,12 +159,14 @@ ons-navigator {
 
 
 .ons-back-label-item {
+  position: absolute;
+  left: 0;
   transition-duration: 400ms;
   animation-timing-function: cubic-bezier(.1, .7, .1, 1);
 }
 
 .ons-back-label-item.ons-right {
-  -webkit-transform: translateX(1200%);
+  -webkit-transform: translateX(300%);
   opacity: 0;
 }
 
@@ -174,5 +176,10 @@ ons-navigator {
 }
 
 .ons-back-label-item.ons-left {
-  -webkit-transform: translateX(-100%);    
+  -webkit-transform: translateX(-100%);   
+  opacity: 0; 
+}
+
+.ons-back-label-content {
+  position: relative;
 }

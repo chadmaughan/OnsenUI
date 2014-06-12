@@ -6,7 +6,7 @@
         </span>      
     </div>
     <div class="ons-back-label-box">
-
+      <div class="ons-back-label-content"></div>
     </div>
     <div class="ons-center-box">
       
