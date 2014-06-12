@@ -158,6 +158,14 @@ ons-navigator {
 }
 
 
+.ons-back-label-box {
+  width: 15%;
+}
+
+.ons-back-label-content {
+  padding: 0 !important;
+}
+
 .ons-back-label-item {
   position: absolute;
   left: 0;

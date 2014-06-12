@@ -28,6 +28,7 @@ limitations under the License.
       this.element = element;
       this.$compile = $compile;
       this.backButtonBox = angular.element(this.element[0].querySelector('.ons-back-button-box'));
+      this.leftBox = angular.element(this.element[0].querySelector('.ons-left-box'));
       this.backLabelBox = angular.element(this.element[0].querySelector('.ons-back-label-box'));
       this.backLabelContent = angular.element(this.element[0].querySelector('.ons-back-label-content'));
       this.centerBox = angular.element(this.element[0].querySelector('.ons-center-box'));
@@ -40,14 +41,16 @@ limitations under the License.
     layout: function(){
       var containerWidth = this.element[0].clientWidth;
       var backButtonBoxWidth = this.backButtonBox[0].clientWidth;
+      var leftBoxWidth = this.leftBox[0].clientWidth;
       var backLabelBoxWidth = this.backLabelBox[0].clientWidth;
       var rightBoxWidth = this.rightBox[0].clientWidth;
 
-      var remainingWidth = containerWidth - (backButtonBoxWidth + backLabelBoxWidth + rightBoxWidth);
+      var remainingWidth = containerWidth - (backButtonBoxWidth + leftBoxWidth + backLabelBoxWidth + rightBoxWidth);
       var centerBoxWidth = remainingWidth;
 
       this.backLabelBox[0].style.left = backButtonBoxWidth + 'px';
-      this.centerBox[0].style.left = backButtonBoxWidth + backLabelBoxWidth + 'px';
+      this.leftBox[0].style.left = backButtonBoxWidth + backLabelBoxWidth + 'px';
+      this.centerBox[0].style.left = backButtonBoxWidth + leftBoxWidth + backLabelBoxWidth + 'px';
       this.centerBox[0].style.width = remainingWidth + 'px';
       this.rightBox[0].style.right = '0px';
     },
@@ -57,6 +60,8 @@ limitations under the License.
       if(options.title){
         this.pushCenterContent(options.title, pageScope);
       }
+
+      this.pushLeftContent(options.left, pageScope);
     },
 
     popOptions: function(){
@@ -72,8 +77,12 @@ limitations under the License.
 
     },
 
-    pushLeftContent: function(leftContent){
-
+    pushLeftContent: function(leftContent, pageScope){
+      setTimeout(function(){
+        leftContent = this.$compile(leftContent)(pageScope.$$childHead.$$childHead);
+        this.leftBox.append(leftContent);
+        this.layout();
+      }.bind(this), 10);      
     },
 
     setLeftContent: function(leftContent){
@@ -717,12 +726,12 @@ limitations under the License.
 
             var $navigatorToolbar = angular.element(navigatorToolbar);
             var title = angular.element($navigatorToolbar[0].querySelector('.center'));
-            var leftButtonIcon = $navigatorToolbar.attr('left-button-icon');
+            var left = angular.element($navigatorToolbar[0].querySelector('.left'));
             var rightButtonIcon = $navigatorToolbar.attr('right-button-icon');
             var onLeftButtonClick = $navigatorToolbar.attr('on-left-button-click');
             var onRightButtonClick = $navigatorToolbar.attr('on-right-button-click');
             options.title = options.title || title;
-            options.leftButtonIcon = options.leftButtonIcon || leftButtonIcon;
+            options.left = options.left || left;
             options.rightButtonIcon = options.rightButtonIcon || rightButtonIcon;
             options.onLeftButtonClick = options.onLeftButtonClick || onLeftButtonClick;
             options.onRightButtonClick = options.onRightButtonClick || onRightButtonClick;
