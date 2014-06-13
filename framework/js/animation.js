@@ -58,54 +58,6 @@
     }
   });
 
-  function animate(element) {
-    return {
-      leave: function(cb) {
-        var animationEndCallback = function() {
-          element.classList.remove('leave');
-          element.classList.remove('leave-active');
-
-          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
-          element.removeEventListener('transitionEnd', animationEndCallback);
-          if(cb){
-            cb();
-          }
-        };
-
-        element.addEventListener('webkitTransitionEnd', animationEndCallback);
-        element.addEventListener('transitionEnd', animationEndCallback);
-
-        element.classList.add('leave');
-        setTimeout(function(){
-          element.classList.add('leave-active');
-        }.bind(this), 10);        
-        
-        return this;
-      },
-      enter: function() {
-        var animationEndCallback = function() {
-
-          console.log('animation end');
-          element.classList.remove('enter');
-          element.classList.remove('enter-active');
-
-          element.removeEventListener('webkitTransitionEnd', animationEndCallback);
-          element.removeEventListener('transitionEnd', animationEndCallback);
-        };
-        element.addEventListener('webkitTransitionEnd', animationEndCallback);
-        element.addEventListener('transitionEnd', animationEndCallback);
-
-        element.classList.add('enter');
-        setTimeout(function(){
-          element.classList.add('enter-active');
-        }.bind(this), 10);
-        
-        return this;
-      }
-    };
-  }
-
-  window.ons = window.ons || {};
-  window.ons.animate = animate;
+  window.ons = window.ons || {};  
   window.ons.Animator = Animator;
 })();

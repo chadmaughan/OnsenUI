@@ -39,7 +39,19 @@ limitations under the License.
       this.rightContent = angular.element(this.element[0].querySelector('.ons-right-box-content'));
       this.attrs = attrs;
 
+      this.bindEvents();
       setTimeout(this.layout.bind(this), 10);      
+    },
+
+    bindEvents: function(){
+      this.backButtonBox[0].addEventListener('click', this.backButtonClicked.bind(this));
+      this.backLabelBox[0].addEventListener('click', this.backButtonClicked.bind(this));
+    },
+
+    backButtonClicked: function(){
+      if(this.onBackButtonClicked){
+        this.onBackButtonClicked.apply();    
+      }      
     },
 
     layout: function(){
@@ -344,24 +356,12 @@ limitations under the License.
 
         this.container = angular.element(element[0].querySelector('.ons-navigator__content'));
         this.toolbarEl = angular.element(element[0].querySelector('.topcoat-navigation-bar'));
-        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs, $compile);
-        this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));
-        // this.leftSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-section'));
-        // this.leftButtonContainer = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__left-button-container'));
-        // this.leftArrow = angular.element(this.leftButtonContainer[0].querySelector('i'));
-
-        // this.rightSection = angular.element(this.toolbarContent[0].querySelector('.ons-navigator__right-button'));
-        // this.rightSectionIcon = angular.element(this.rightSection[0].querySelector('.ons-navigator__right-section-icon'));
-
-        // this.leftButtonClickFn = $parse(scope.onLeftButtonClick);
+        this.toolbar = new ons.Toolbar(scope, this.toolbarEl, attrs, $compile);        
+        this.toolbar.onBackButtonClicked = this.onLeftButtonClicked.bind(this);
+        this.toolbarContent = angular.element(element[0].querySelector('.ons-navigator__toolbar-content'));        
 
         this.setReady(true);
 
-        // fix android 2.3 click event not fired some times when used with sliding menu
-        // this.leftButtonContainer.bind('touchend', function() {});
-
-        // this.leftButtonContainer.bind('click', this.onLeftButtonClicked.bind(this));
-        // this.rightSection.bind('click', this.onRightButtonClicked.bind(this));
         if (scope.page) {
           var options = {
             title: scope.title,
@@ -372,16 +372,9 @@ limitations under the License.
           };
           this.pushPage(scope.page, options);
         }
-        this.checkiOS7();
-
-        // attrs.$observe('title', function(title) {
-        //   if (title) {
-        //     this.setTitle(title);
-        //   }
-        // }.bind(this));
-
+        this.checkiOS7();      
         this.attachScopeMethods();
-      },
+      },      
 
       attachScopeMethods: function() {
         this.scope.pushPage = this.pushPage.bind(this);
@@ -435,15 +428,15 @@ limitations under the License.
       },
 
       onLeftButtonClicked: function() {
-        // var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
-        // if (onLeftButtonClick) {
-        //   var onLeftButtonClickFn = $parse(onLeftButtonClick);
-        //   onLeftButtonClickFn(this.scope.$parent);
-        // } else {
-        //   if (this.canPopPage()) {
-        //     this.popPage();
-        //   }
-        // }
+        var onLeftButtonClick = this.getCurrentNavigatorItem().options.onLeftButtonClick;
+        if (onLeftButtonClick) {
+          var onLeftButtonClickFn = $parse(onLeftButtonClick);
+          onLeftButtonClickFn(this.scope.$parent);
+        } else {
+          if (this.canPopPage()) {
+            this.popPage();
+          }
+        }
       },
 
       animatePageIn: function(inPage, outPage) {
@@ -578,36 +571,15 @@ limitations under the License.
           pager.addClass('ons-navigator__pager--navigate-right');
 
           setTimeout(function() {
-            this.animatePageIn(pager, previousPage);            
-            // this.animateTitleIn(navigatorItem, previousNavigatorItem);
-
-            // this.animateBackLabelIn(navigatorItem, previousNavigatorItem);
-            // this.animateRightButtonIn(navigatorItem, previousNavigatorItem);
+            this.animatePageIn(pager, previousPage);                        
           }.bind(this), 0);
 
         } else {
-          // root page
-          // var titleElement = angular.element('<div></div>');
-
-          // titleElement.addClass(
-          //   'ons-navigator__item ons-navigator__title ' +
-          //   'topcoat-navigation-bar__title topcoat-navigation-bar__line-height ' +
-          //   'center ons-navigator__title--animate-center ' + 
-          //   this.modifierTemplater('topcoat-navigation-bar--*__title') + ' ' +
-          //   this.modifierTemplater('topcoat-navigation-bar--*__line-height')
-          // );
-
-          // if (options.title) {
-          //   titleElement.text(options.title);
-          // }
-          // this.toolbarContent.append(titleElement);
-          // navigatorItem.titleElement = titleElement;
-          // this.animateRightButtonIn(navigatorItem, null);
+          // root page          
           this.setReady(true);
         }
         this.toolbar.pushOptions(navigatorItem.options, pageScope);
-        this.navigatorItems.push(navigatorItem);
-        // this.setLeftButton(navigatorItem);
+        this.navigatorItems.push(navigatorItem);        
       },
 
       appendPage: function(templateHTML, options) {
@@ -668,12 +640,6 @@ limitations under the License.
         var previousPage = previousNavigatorItem.page;
         this.animatePageOut(currentPage, previousPage);
         this.toolbar.popOptions();
-
-        // this.animateTitleOut(currentNavigatorItem, previousNavigatorItem);
-        // this.animateBackLabelOut(previousNavigatorItem, currentNavigatorItem);
-
-        // this.setLeftButton(previousNavigatorItem);
-        // this.animateRightButtonOut(previousNavigatorItem, currentNavigatorItem);
         currentNavigatorItem.pageScope.$destroy();
       }
     });
