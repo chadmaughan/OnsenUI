@@ -1,8 +1,25 @@
 <ons-page class="center">
-	<ons-navigator-toolbar title="Page 2">
+<div ng-controller="Page2Controller">
+	
+
+	<ons-navigator-toolbar>		
+		<div class="center">			
+			<i class="fa fa-adjust"></i>
+			<span>{{binding}}</span>
+		</div>
+		<div class="right">
+			<span class="topcoat-icon-button--quiet">
+				<i class="fa fa-bars"></i>
+			</span>			
+		</div>
 	</ons-navigator-toolbar>
 
 	<h1>Page 2</h1>
+	
+	<ons-button ng-click="ons.navigator.pushPage('page3.html')">
+		Page 3
+	</ons-button>
 
 	<ons-button onclick="app.navi.popPage('page1.html')">Pop</ons-button>
+</div>
 </ons-page>

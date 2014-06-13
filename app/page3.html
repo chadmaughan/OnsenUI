@@ -1,0 +1,38 @@
+<ons-page class="center">
+<div ng-controller="Page3Controller">
+	
+
+	<ons-navigator-toolbar>
+		<div class="left">
+			<span class="topcoat-icon-button--quiet" ng-click="twitter()">
+				<i class="fa {{icon}}"></i>
+			</span>
+			
+			<span class="topcoat-icon-button--quiet" ng-click="facebook()">
+				<i class="fa fa-facebook"></i>
+			</span>			
+		</div>
+		<div class="center">			
+			<i class="fa fa-bars"></i>
+			<span>{{title}}</span>
+		</div>
+		<div class="right">
+			<span class="topcoat-icon-button--quiet" ng-click="twitter()">
+				<i class="fa {{icon}}"></i>
+			</span>
+			
+			<span class="topcoat-icon-button--quiet" ng-click="facebook()">
+				<i class="fa fa-facebook"></i>
+			</span>			
+		</div>
+	</ons-navigator-toolbar>
+
+	<h1>Page 3</h1>
+
+	<ons-button ng-click="changeTitle()">
+		Change Title
+	</ons-button>
+
+	<ons-button onclick="app.navi.popPage('page1.html')">Pop</ons-button>
+</div>
+</ons-page>
