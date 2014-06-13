@@ -14,10 +14,15 @@
     </div>
     
     <div class="ons-left-box">
+      <div class="ons-left-box-content">
+        
+      </div>
     </div>    
     
     <div class="ons-right-box">
-      Right
+      <div class="ons-right-box-content">
+        
+      </div>
     </div>
   </div>
 

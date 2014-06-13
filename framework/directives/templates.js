@@ -137,10 +137,15 @@ app.run(["$templateCache", function($templateCache) {
     "    </div>\n" +
     "    \n" +
     "    <div class=\"ons-left-box\">\n" +
+    "      <div class=\"ons-left-box-content\">\n" +
+    "        \n" +
+    "      </div>\n" +
     "    </div>    \n" +
     "    \n" +
     "    <div class=\"ons-right-box\">\n" +
-    "      Right\n" +
+    "      <div class=\"ons-right-box-content\">\n" +
+    "        \n" +
+    "      </div>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "\n" +
